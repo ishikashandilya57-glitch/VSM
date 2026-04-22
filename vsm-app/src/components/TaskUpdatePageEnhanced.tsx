@@ -439,17 +439,34 @@ export default function TaskUpdatePageEnhanced({ onSave, factory = 'dbr' }: Task
     setLoadingOcNumbers(true);
     try {
       const cacheKey = `oc_numbers_by_process_${factory}_${processStage}`;
+      const shouldBypassCache = processStage === 'Fabric Inhouse';
 
       // Try cache
-      let ocData = cache.get<any[]>(cacheKey);
+      let ocData = shouldBypassCache ? null : cache.get<any[]>(cacheKey);
       
       if (!ocData) {
-        const url = `/api/${factory}/oc-numbers-by-process?process=${encodeURIComponent(processStage)}`;
+        const refreshParam = shouldBypassCache ? `&refresh=${Date.now()}` : '';
+        const url = `/api/${factory}/oc-numbers-by-process?process=${encodeURIComponent(processStage)}${refreshParam}`;
         const result = await apiGet(url);
         
         if (result.success) {
           ocData = result.data;
-          cache.set(cacheKey, ocData);
+          if (!shouldBypassCache) {
+            cache.set(cacheKey, ocData);
+          }
+        }
+      }
+
+      // Fabric Inhouse should never feel blocked by an empty eligibility list.
+      // If the stricter API returns nothing, fall back to all Order_Master OCs.
+      if (shouldBypassCache && (!ocData || ocData.length === 0)) {
+        const fallbackResult = await apiGet(`/api/${factory}/oc-numbers?refresh=${Date.now()}`);
+        if (fallbackResult.success && Array.isArray(fallbackResult.data)) {
+          ocData = fallbackResult.data.map((ocNo: string) => ({
+            ocNo,
+            line: '',
+            buyer: ''
+          }));
         }
       }
 
@@ -483,6 +500,10 @@ export default function TaskUpdatePageEnhanced({ onSave, factory = 'dbr' }: Task
   // Trigger fetch when process changes
   useEffect(() => {
     setSelectedBuyer(''); // Reset buyer filter on process change
+    setOcSearchTerm('');
+    setFilteredOcNumbers([]);
+    setOcNumbers([]);
+    setAllOcData([]);
     fetchOcNumbersByProcess(formData.processStage);
   }, [formData.processStage, factory]);
 
@@ -500,7 +521,7 @@ export default function TaskUpdatePageEnhanced({ onSave, factory = 'dbr' }: Task
       setFormData(prev => ({ ...prev, ocNo: '', lineNo: '' }));
       setOcSearchTerm('');
     }
-  }, [selectedBuyer, formData.processStage]);
+  }, [selectedBuyer, formData.processStage, allOcData]);
 
   // Debounced OC Search
   const debouncedSearch = useCallback(
