@@ -1,0 +1,114 @@
+🚀 DEPLOYMENT STEPS - DO THIS NOW
+=====================================
+
+STEP 1: IMPORT CSV TO GOOGLE SHEETS
+------------------------------------
+1. Locate file: vsm-app/SOP_CAL_FINAL_CORRECTED.csv
+2. Open your Google Sheet
+3. Go to SOP_Cal tab (or create new tab named "SOP_Cal")
+4. File → Import → Upload
+5. Select SOP_CAL_FINAL_CORRECTED.csv
+6. Choose "Replace current sheet"
+7. Click Import
+
+✅ VERIFY: You should see 146 rows (1 header + 145 data rows)
+
+
+STEP 2: DEPLOY APPS SCRIPT
+---------------------------
+1. Open Google Sheet
+2. Extensions → Apps Script
+3. Delete all existing code in Code.gs
+4. Copy ENTIRE content from: vsm-app/google-apps-script/Code_WithCalculations_FIXED_V2.gs
+5. Paste into Code.gs
+6. Click Save (💾 icon)
+7. Click Deploy → New deployment
+8. Choose "Web app"
+9. Execute as: Me
+10. Who has access: Anyone
+11. Click Deploy
+12. Copy the Web App URL
+
+✅ VERIFY: You should get a deployment URL
+
+
+STEP 3: UPDATE FRONTEND (if needed)
+------------------------------------
+If your frontend doesn't have the Product Type dropdown yet:
+
+1. Make sure vsm-app/src/app/api/product-types/route.ts exists
+2. Make sure vsm-app/src/components/TaskUpdatePageEnhanced.tsx has Product Type field
+3. Run: npm run dev (in vsm-app folder)
+4. Test the form
+
+
+STEP 4: TEST THE SYSTEM
+------------------------
+1. Open your web app
+2. Fill in test data:
+   - OC Number: TEST001
+   - Product Type: Shirt
+   - Quantity: 800 (should use Q1 - fastest)
+   - Wash Type: Non-Wash
+   - Factory: Test Factory
+   - Line: Line 1
+3. Submit
+4. Check Order_Master sheet for new row
+5. Verify calculations are correct
+
+Expected for 800 qty Shirt:
+- Cutting: 1.9 days (Q1)
+- Sewing: 1.7 days (Q1)
+- Should be FASTER than 3000 qty
+
+
+WHAT'S FIXED IN THIS VERSION
+-----------------------------
+✅ Product Type dropdown added to UI
+✅ Product Type saved to Column AK (37)
+✅ SOP_Cal has all 5 quantity bands (Q1-Q5)
+✅ Q1 is FASTER than Q2 (smaller qty = less time)
+✅ Q2 is baseline from actual data
+✅ Q3, Q4, Q5 progressively slower
+✅ All 4 Overshirt issues fixed (Cutting, Sewing, Washing, Finishing)
+
+
+QUANTITY BAND LOGIC
+-------------------
+Q1 (≤1000):  FASTEST  (8-10% faster than Q2)
+Q2 (≤3000):  BASELINE (actual data)
+Q3 (≤5000):  +8% from Q2
+Q4 (≤8000):  +19% from Q2
+Q5 (>8000):  +35% from Q2
+
+
+FILES INVOLVED
+--------------
+✅ SOP_CAL_FINAL_CORRECTED.csv - Import this to Google Sheets
+✅ Code_WithCalculations_FIXED_V2.gs - Deploy this to Apps Script
+✅ TaskUpdatePageEnhanced.tsx - Frontend with Product Type dropdown
+✅ api/product-types/route.ts - API endpoint for Product Type options
+✅ api/update-task/route.ts - Updated to handle Product Type
+
+
+TROUBLESHOOTING
+---------------
+❌ If calculations still wrong:
+   → Check SOP_Cal sheet has correct data
+   → Verify column positions (J=SOP LT, K=VA, L=NNVA, M=NVA)
+   → Check Apps Script is deployed (not just saved)
+
+❌ If Product Type dropdown empty:
+   → Check SOP_Cal Column C has: Shirt, Overshirt, Knitted Shirt, Tape Shirt, All
+   → Verify getProductTypes() function in Apps Script
+
+❌ If Q1 still same as Q2:
+   → You're using old CSV - use SOP_CAL_FINAL_CORRECTED.csv
+
+
+DONE! 🎉
+--------
+After these steps, your system will:
+- Calculate based on actual Product Type (not "All")
+- Use correct quantity bands (Q1 fastest, Q5 slowest)
+- Have accurate SOP lead times for all combinations

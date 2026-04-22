@@ -1,0 +1,231 @@
+═══════════════════════════════════════════════════════════════
+  📦 DEPLOY: Automatic Order Archival System
+═══════════════════════════════════════════════════════════════
+
+WHAT IT DOES:
+Automatically archives orders 1 week after dispatch
+Keeps your dashboard clean and focused on active orders
+
+───────────────────────────────────────────────────────────────
+STEP 1: CREATE ARCHIVE SHEET (5 MINUTES)
+───────────────────────────────────────────────────────────────
+
+1. Open your Google Sheet
+2. Right-click on "VSM_Execution" tab at bottom
+3. Click "Duplicate"
+4. Right-click on the new "Copy of VSM_Execution" tab
+5. Click "Rename"
+6. Name it: VSM_Execution_Archive
+7. Click on the archive sheet
+8. Add 3 new columns at the END (after last column):
+   - Column AX: Archived Date
+   - Column AY: Archived By
+   - Column AZ: Days Since Dispatch
+9. Select all data rows (not headers)
+10. Right-click → Delete rows
+11. Keep only the header row
+
+───────────────────────────────────────────────────────────────
+STEP 2: ADD FUNCTIONS TO APPS SCRIPT (5 MINUTES)
+───────────────────────────────────────────────────────────────
+
+1. Open Google Apps Script editor
+2. Open your Code_WithCalculations_FIXED_V2.gs file
+3. Scroll to the END of the file
+4. Copy ALL functions from: google-apps-script/ORDER_ARCHIVAL.gs
+5. Paste at the end of your Apps Script file
+6. Save (Ctrl+S or Cmd+S)
+
+Functions to add:
+- archiveOldOrders()
+- getDispatchDate()
+- setupDailyArchivalTrigger()
+- manualArchive()
+- testArchival()
+
+───────────────────────────────────────────────────────────────
+STEP 3: SET UP AUTOMATIC TRIGGER (2 MINUTES)
+───────────────────────────────────────────────────────────────
+
+1. In Apps Script editor, find the function dropdown (top)
+2. Select: setupDailyArchivalTrigger
+3. Click "Run" button (▶️)
+4. If prompted, click "Review permissions"
+5. Select your Google account
+6. Click "Advanced" → "Go to [Your Project]"
+7. Click "Allow"
+8. Wait for execution to complete
+9. Check execution log - should see:
+   "✅ Daily archival trigger created successfully"
+
+───────────────────────────────────────────────────────────────
+STEP 4: VERIFY TRIGGER (1 MINUTE)
+───────────────────────────────────────────────────────────────
+
+1. In Apps Script, click "Triggers" icon (⏰ clock icon on left)
+2. You should see:
+   Function: archiveOldOrders
+   Event: Time-driven
+   Type: Day timer
+   Time: Every day 1-2am
+
+3. If you see this, trigger is set up correctly! ✅
+
+───────────────────────────────────────────────────────────────
+STEP 5: TEST (OPTIONAL - 2 MINUTES)
+───────────────────────────────────────────────────────────────
+
+To test without waiting for 1 AM:
+
+1. In Apps Script, select function: testArchival
+2. Click "Run" button (▶️)
+3. Check execution log
+4. Should show:
+   - How many orders would be archived
+   - Which OC Numbers would be archived
+   - "No orders ready for archival" if none are old enough
+
+To actually archive now:
+
+1. Select function: archiveOldOrders
+2. Click "Run" button (▶️)
+3. Check VSM_Execution_Archive sheet
+4. Verify orders were moved
+
+───────────────────────────────────────────────────────────────
+HOW IT WORKS
+───────────────────────────────────────────────────────────────
+
+EVERY DAY AT 1 AM:
+1. System checks all orders in VSM_Execution
+2. Finds orders with "Dispatch" completed > 7 days ago
+3. Copies all rows for those orders to VSM_Execution_Archive
+4. Adds metadata: Archived Date, Archived By, Days Since Dispatch
+5. Deletes those rows from VSM_Execution
+6. Logs results
+
+EXAMPLE:
+Order LC/DMN/25/12270
+- Dispatched: Jan 15, 2026
+- Today: Jan 23, 2026 (8 days later)
+- Action: Archived automatically at 1 AM
+- Result: Moved to archive, removed from active tracking
+
+───────────────────────────────────────────────────────────────
+CONFIGURATION
+───────────────────────────────────────────────────────────────
+
+CHANGE ARCHIVE PERIOD:
+In archiveOldOrders() function, find this line:
+  const cutoffDate = new Date(today.getTime() - (7 * 24 * 60 * 60 * 1000));
+
+Change 7 to:
+- 14 for 2 weeks
+- 30 for 1 month
+- 3 for 3 days
+
+CHANGE TRIGGER TIME:
+In setupDailyArchivalTrigger() function, find:
+  .atHour(1) // 1 AM
+
+Change 1 to:
+- 0 for midnight
+- 3 for 3 AM
+- 23 for 11 PM
+
+Then re-run setupDailyArchivalTrigger() to update
+
+───────────────────────────────────────────────────────────────
+MANUAL ARCHIVAL
+───────────────────────────────────────────────────────────────
+
+To manually archive specific orders:
+
+1. In Apps Script, add this at the end:
+   function archiveSpecificOrders() {
+     return manualArchive([
+       'LC/DMN/25/12270',
+       'LC/DMN/25/12271'
+     ]);
+   }
+
+2. Replace OC Numbers with your orders
+3. Run archiveSpecificOrders()
+4. Check archive sheet
+
+───────────────────────────────────────────────────────────────
+VIEWING ARCHIVED ORDERS
+───────────────────────────────────────────────────────────────
+
+1. Open your Google Sheet
+2. Click "VSM_Execution_Archive" tab
+3. View all archived orders
+4. Filter by:
+   - Archived Date
+   - OC Number
+   - Days Since Dispatch
+
+───────────────────────────────────────────────────────────────
+RESTORING ARCHIVED ORDERS
+───────────────────────────────────────────────────────────────
+
+If you need to restore an order:
+
+1. Open VSM_Execution_Archive sheet
+2. Find the order rows
+3. Copy the rows (without archive metadata columns)
+4. Open VSM_Execution sheet
+5. Paste at the bottom
+6. Delete from archive if needed
+
+───────────────────────────────────────────────────────────────
+TROUBLESHOOTING
+───────────────────────────────────────────────────────────────
+
+Issue: Trigger not running
+→ Check "Triggers" tab, verify trigger exists
+→ Check execution log for errors
+→ Re-run setupDailyArchivalTrigger()
+
+Issue: Archive sheet not found
+→ Verify sheet name is exactly "VSM_Execution_Archive"
+→ Check sheet exists in same workbook
+
+Issue: No orders archived
+→ Check if any orders have Dispatch completed > 7 days ago
+→ Run testArchival() to see what would be archived
+→ Check execution log for details
+
+Issue: Wrong orders archived
+→ Verify Dispatch process has Actual End Date
+→ Check cutoffDate calculation in code
+→ Review execution log
+
+───────────────────────────────────────────────────────────────
+BENEFITS
+───────────────────────────────────────────────────────────────
+
+✅ Clean Dashboard - Only shows active orders
+✅ Better Performance - Fewer rows = faster queries
+✅ Automatic - No manual work needed
+✅ Historical Data - All data preserved in archive
+✅ Configurable - Easy to adjust period
+✅ Safe - Data copied before deletion
+✅ Reversible - Can restore from archive
+
+───────────────────────────────────────────────────────────────
+CHECKLIST
+───────────────────────────────────────────────────────────────
+
+[ ] Archive sheet created (VSM_Execution_Archive)
+[ ] 3 metadata columns added (AX, AY, AZ)
+[ ] Functions added to Apps Script
+[ ] Apps Script saved
+[ ] setupDailyArchivalTrigger() run
+[ ] Trigger verified in Triggers tab
+[ ] Test run completed (optional)
+[ ] System working automatically
+
+═══════════════════════════════════════════════════════════════
+  Deploy and enjoy automatic order archival! 📦✨
+═══════════════════════════════════════════════════════════════

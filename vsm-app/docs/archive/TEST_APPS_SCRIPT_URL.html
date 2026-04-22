@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Test Apps Script URL</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 50px auto;
+            padding: 20px;
+        }
+        .test-box {
+            border: 2px solid #ddd;
+            padding: 20px;
+            margin: 20px 0;
+            border-radius: 8px;
+        }
+        .success { border-color: #4CAF50; background: #f1f8f4; }
+        .error { border-color: #f44336; background: #fef1f0; }
+        .loading { border-color: #2196F3; background: #e3f2fd; }
+        button {
+            background: #2196F3;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            font-size: 16px;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        button:hover { background: #1976D2; }
+        pre {
+            background: #f5f5f5;
+            padding: 15px;
+            border-radius: 4px;
+            overflow-x: auto;
+        }
+    </style>
+</head>
+<body>
+    <h1>🧪 Test Apps Script URL</h1>
+    
+    <div class="test-box">
+        <h2>Apps Script URL:</h2>
+        <pre id="url">https://script.google.com/macros/s/AKfycbwAfVUwR5IXcpfG9Wa6wRAaKsG2_Xeu_-UXyuk_1kt3t9jxpZeq9V8OPBzSqZeoUIaW/exec</pre>
+    </div>
+
+    <button onclick="testAppsScript()">🚀 Test Connection</button>
+
+    <div id="result"></div>
+
+    <script>
+        async function testAppsScript() {
+            const resultDiv = document.getElementById('result');
+            const url = document.getElementById('url').textContent.trim();
+            
+            // Test URL with parameters
+            const testUrl = `${url}?ocNo=PRLS/25/12973&processStage=CAD / Pattern`;
+            
+            resultDiv.innerHTML = `
+                <div class="test-box loading">
+                    <h2>⏳ Testing...</h2>
+                    <p>Calling: ${testUrl}</p>
+                </div>
+            `;
+
+            try {
+                const response = await fetch(testUrl);
+                const contentType = response.headers.get('content-type');
+                
+                if (contentType && contentType.includes('application/json')) {
+                    const data = await response.json();
+                    
+                    resultDiv.innerHTML = `
+                        <div class="test-box success">
+                            <h2>✅ SUCCESS!</h2>
+                            <p><strong>Status:</strong> ${response.status}</p>
+                            <p><strong>Content-Type:</strong> ${contentType}</p>
+                            <h3>Response:</h3>
+                            <pre>${JSON.stringify(data, null, 2)}</pre>
+                            <p style="color: green; font-weight: bold;">
+                                🎉 Apps Script is working! Target dates should appear in your app.
+                            </p>
+                        </div>
+                    `;
+                } else {
+                    const text = await response.text();
+                    resultDiv.innerHTML = `
+                        <div class="test-box error">
+                            <h2>❌ WRONG RESPONSE TYPE</h2>
+                            <p><strong>Status:</strong> ${response.status}</p>
+                            <p><strong>Content-Type:</strong> ${contentType}</p>
+                            <p><strong>Problem:</strong> Apps Script returned HTML instead of JSON</p>
+                            <h3>Response (first 500 chars):</h3>
+                            <pre>${text.substring(0, 500)}</pre>
+                            <p style="color: red; font-weight: bold;">
+                                ⚠️ Apps Script is NOT deployed correctly as Web App!
+                            </p>
+                            <h3>Solution:</h3>
+                            <ol>
+                                <li>Open Google Apps Script Editor</li>
+                                <li>Click Deploy → New deployment</li>
+                                <li>Choose "Web app"</li>
+                                <li>Execute as: Me</li>
+                                <li>Who has access: Anyone</li>
+                                <li>Click Deploy</li>
+                            </ol>
+                        </div>
+                    `;
+                }
+            } catch (error) {
+                resultDiv.innerHTML = `
+                    <div class="test-box error">
+                        <h2>❌ FETCH FAILED</h2>
+                        <p><strong>Error:</strong> ${error.message}</p>
+                        <p><strong>Problem:</strong> Cannot reach Apps Script URL</p>
+                        <h3>Possible Causes:</h3>
+                        <ul>
+                            <li>Apps Script not deployed</li>
+                            <li>Wrong URL in .env.local</li>
+                            <li>Network/firewall blocking request</li>
+                            <li>CORS issue</li>
+                        </ul>
+                        <h3>Solution:</h3>
+                        <ol>
+                            <li>Verify Apps Script is deployed as Web App</li>
+                            <li>Check the URL is correct</li>
+                            <li>Try opening the URL directly in browser</li>
+                        </ol>
+                    </div>
+                `;
+            }
+        }
+    </script>
+</body>
+</html>

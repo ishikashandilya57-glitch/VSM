@@ -1,0 +1,169 @@
+═══════════════════════════════════════════════════════════════
+  ✅ YES - YOU ONLY DEPLOY ONE APPS SCRIPT FILE
+═══════════════════════════════════════════════════════════════
+
+YOU HAVE ONE MAIN FILE IN GOOGLE APPS SCRIPT:
+📄 Code_WithCalculations_FIXED_V2.gs
+
+ALL CHANGES GO INTO THIS ONE FILE!
+
+═══════════════════════════════════════════════════════════════
+  WHAT TO DO
+═══════════════════════════════════════════════════════════════
+
+STEP 1: Open Google Apps Script
+────────────────────────────────────────────────────────────────
+1. Go to your Google Sheet
+2. Extensions → Apps Script
+3. You'll see your file: Code_WithCalculations_FIXED_V2.gs
+
+────────────────────────────────────────────────────────────────
+
+STEP 2: Make Changes to THIS ONE FILE
+────────────────────────────────────────────────────────────────
+
+You need to ADD code to this file:
+
+┌─────────────────────────────────────────────────────────────┐
+│ CHANGE #1: Fix Completion Status (Line ~1221)              │
+│ Time: 2 minutes                                             │
+│                                                             │
+│ FIND THIS LINE:                                             │
+│   rowData[COL.ACTUAL_END - 1] = '';                        │
+│                                                             │
+│ CHANGE TO:                                                  │
+│   rowData[COL.ACTUAL_END - 1] = actualDates.actualEnd || '';│
+└─────────────────────────────────────────────────────────────┘
+
+┌─────────────────────────────────────────────────────────────┐
+│ CHANGE #2: Add Process Status Function                     │
+│ Time: 5 minutes                                             │
+│                                                             │
+│ COPY from: google-apps-script/PROCESS_STATUS_ENDPOINT.gs   │
+│ PASTE at: END of your Code_WithCalculations_FIXED_V2.gs    │
+│                                                             │
+│ This adds the getProcessStatus() function                  │
+└─────────────────────────────────────────────────────────────┘
+
+┌─────────────────────────────────────────────────────────────┐
+│ CHANGE #3: Update doGet() Function                         │
+│ Time: 3 minutes                                             │
+│                                                             │
+│ FIND your doGet() function                                 │
+│ ADD this code inside it:                                   │
+│                                                             │
+│   if (action === 'getProcessStatus') {                     │
+│     const ocNo = e.parameter.ocNo;                         │
+│     if (!ocNo) {                                           │
+│       return ContentService.createTextOutput(              │
+│         JSON.stringify({                                   │
+│           success: false,                                  │
+│           error: 'OC Number is required'                   │
+│         })                                                 │
+│       ).setMimeType(ContentService.MimeType.JSON);         │
+│     }                                                      │
+│     const result = getProcessStatus(ocNo);                 │
+│     return ContentService.createTextOutput(                │
+│       JSON.stringify(result)                               │
+│     ).setMimeType(ContentService.MimeType.JSON);           │
+│   }                                                        │
+└─────────────────────────────────────────────────────────────┘
+
+┌─────────────────────────────────────────────────────────────┐
+│ CHANGE #4: Add Order Archival Functions (OPTIONAL)         │
+│ Time: 5 minutes                                             │
+│                                                             │
+│ COPY from: google-apps-script/ORDER_ARCHIVAL.gs            │
+│ PASTE at: END of your Code_WithCalculations_FIXED_V2.gs    │
+│                                                             │
+│ This adds automatic order archival                         │
+└─────────────────────────────────────────────────────────────┘
+
+┌─────────────────────────────────────────────────────────────┐
+│ CHANGE #5: Add Caching (OPTIONAL - for performance)        │
+│ Time: 5 minutes                                             │
+│                                                             │
+│ COPY from: google-apps-script/CACHING_SYSTEM.gs            │
+│ PASTE at: END of your Code_WithCalculations_FIXED_V2.gs    │
+│                                                             │
+│ This makes your system 5x faster                           │
+└─────────────────────────────────────────────────────────────┘
+
+┌─────────────────────────────────────────────────────────────┐
+│ CHANGE #6: Add Error Handling (OPTIONAL - for stability)   │
+│ Time: 5 minutes                                             │
+│                                                             │
+│ COPY from: google-apps-script/ERROR_HANDLING.gs            │
+│ PASTE at: END of your Code_WithCalculations_FIXED_V2.gs    │
+│                                                             │
+│ This prevents crashes                                      │
+└─────────────────────────────────────────────────────────────┘
+
+────────────────────────────────────────────────────────────────
+
+STEP 3: Save and Deploy
+────────────────────────────────────────────────────────────────
+1. Save (Ctrl+S)
+2. Click "Deploy" → "Manage deployments"
+3. Click pencil icon (Edit)
+4. Version: "New version"
+5. Description: "Process sequence + completion fix + archival"
+6. Click "Deploy"
+7. Done!
+
+═══════════════════════════════════════════════════════════════
+  SUMMARY
+═══════════════════════════════════════════════════════════════
+
+ONE FILE: Code_WithCalculations_FIXED_V2.gs
+
+REQUIRED CHANGES (10 minutes):
+✅ Change 1 line (completion status)
+✅ Add getProcessStatus() function
+✅ Update doGet() function
+
+OPTIONAL CHANGES (15 minutes):
+⭐ Add archival functions
+⭐ Add caching functions
+⭐ Add error handling functions
+
+THEN: Save and deploy ONCE
+
+═══════════════════════════════════════════════════════════════
+  WHICH GUIDE TO FOLLOW?
+═══════════════════════════════════════════════════════════════
+
+For REQUIRED changes only (10 min):
+📖 DEPLOY_ALL_THREE_FEATURES.txt
+
+For EVERYTHING including performance (3 hours):
+📖 DEPLOY_ALL_THREE_FEATURES.txt (30 min)
+📖 DEPLOY_PHASE_1_OPTIMIZATIONS.txt (2-3 hours)
+
+═══════════════════════════════════════════════════════════════
+  FRONTEND
+═══════════════════════════════════════════════════════════════
+
+Frontend files are ALREADY CREATED:
+✅ src/lib/cache.ts
+✅ src/lib/api.ts
+✅ src/components/ErrorBoundary.tsx
+✅ src/components/TaskUpdatePageEnhanced.tsx
+
+You just need to:
+1. Restart dev server: npm run dev
+2. That's it!
+
+═══════════════════════════════════════════════════════════════
+  ANSWER: YES, ONE FILE TO DEPLOY!
+═══════════════════════════════════════════════════════════════
+
+All the separate .gs files in google-apps-script/ folder are
+just REFERENCE files for you to COPY FROM.
+
+You COPY the code from those files and PASTE into your ONE main
+file: Code_WithCalculations_FIXED_V2.gs
+
+Then deploy ONCE.
+
+═══════════════════════════════════════════════════════════════

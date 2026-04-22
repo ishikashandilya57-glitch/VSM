@@ -1,0 +1,178 @@
+🚀 FINAL DEPLOYMENT STEPS - DO THIS NOW
+==========================================
+
+Your frontend is running at: http://localhost:3000
+But target dates won't work until you deploy the Apps Script!
+
+═══════════════════════════════════════════════════════════════
+
+STEP 1: DEPLOY APPS SCRIPT TO GOOGLE
+-------------------------------------
+
+1. Open your Google Sheet:
+   https://docs.google.com/spreadsheets/d/1pf9L-WLSelHmFG2aGE891hScLTSRAmcvI16T7YLpmI0
+
+2. Click: Extensions → Apps Script
+
+3. You'll see Code.gs file - DELETE ALL existing code
+
+4. Open this file on your computer:
+   vsm-app/google-apps-script/Code_WithCalculations_FIXED_V2.gs
+
+5. Copy EVERYTHING (Ctrl+A, then Ctrl+C)
+
+6. Paste into Code.gs in Apps Script Editor (Ctrl+V)
+
+7. Click the SAVE icon (💾) or press Ctrl+S
+
+8. Click: Deploy → New deployment
+
+9. Click the gear icon ⚙️ next to "Select type"
+
+10. Choose: Web app
+
+11. Fill in:
+    - Description: "VSM System with Product Type"
+    - Execute as: Me (your email)
+    - Who has access: Anyone
+
+12. Click: Deploy
+
+13. You'll see a URL like:
+    https://script.google.com/macros/s/AKfycbw.../exec
+    
+14. COPY THIS URL!
+
+═══════════════════════════════════════════════════════════════
+
+STEP 2: UPDATE .ENV.LOCAL (IF URL CHANGED)
+-------------------------------------------
+
+If you got a NEW deployment URL (different from the one already in .env.local):
+
+1. Open: vsm-app/.env.local
+
+2. Find this line:
+   NEXT_PUBLIC_GOOGLE_APPS_SCRIPT_URL=...
+
+3. Replace with your NEW URL:
+   NEXT_PUBLIC_GOOGLE_APPS_SCRIPT_URL=https://script.google.com/macros/s/YOUR_NEW_ID/exec
+
+4. Save the file
+
+═══════════════════════════════════════════════════════════════
+
+STEP 3: RESTART DEV SERVER (IF YOU CHANGED .ENV.LOCAL)
+-------------------------------------------------------
+
+Only needed if you updated .env.local:
+
+1. Go to the terminal running the dev server
+
+2. Press: Ctrl+C (to stop)
+
+3. Run: npm run dev
+
+4. Wait for "Ready in X seconds"
+
+═══════════════════════════════════════════════════════════════
+
+STEP 4: TEST IN BROWSER
+------------------------
+
+1. Open: http://localhost:3000
+
+2. Select:
+   - Line: DBR_L1
+   - OC NO: PRLS/25/12973
+   - Process: Pre-Production
+
+3. Product Type dropdown should appear
+
+4. Select: Shirt
+
+5. Target dates should appear (not "N/A")!
+
+═══════════════════════════════════════════════════════════════
+
+STEP 5: IMPORT SOP_CAL CSV (OPTIONAL BUT RECOMMENDED)
+------------------------------------------------------
+
+For accurate calculations with all quantity bands:
+
+1. Open your Google Sheet
+
+2. Find or create tab: SOP_Cal
+
+3. File → Import → Upload
+
+4. Select: vsm-app/SOP_CAL_FINAL_CORRECTED.csv
+
+5. Choose: Replace current sheet
+
+6. Click: Import data
+
+═══════════════════════════════════════════════════════════════
+
+✅ VERIFICATION CHECKLIST
+--------------------------
+
+After deployment, verify:
+
+□ Target dates appear (not "N/A")
+□ Product Type dropdown shows for Pre-Production
+□ Product Type dropdown hidden for other processes
+□ Calculations use product-specific SOP times
+□ Form submission works without errors
+
+═══════════════════════════════════════════════════════════════
+
+🆘 TROUBLESHOOTING
+------------------
+
+If target dates still show "N/A":
+
+1. Check browser console (F12) for errors
+
+2. Test Apps Script directly in browser:
+   YOUR_URL?ocNo=PRLS/25/12973&processStage=Pre-Production&productType=Shirt
+   
+   Should return JSON, not HTML
+
+3. Check Apps Script logs:
+   - Apps Script Editor → View → Logs
+   - Look for errors
+
+4. Verify .env.local has correct URL with NEXT_PUBLIC_ prefix
+
+═══════════════════════════════════════════════════════════════
+
+📝 WHAT'S BEEN UPDATED
+----------------------
+
+✅ Product Type dropdown - only shows for Pre-Production
+✅ Product Type auto-retrieval - for other processes
+✅ SOP calculations - use product-specific times
+✅ Validation - Product Type required only for Pre-Production
+✅ OC search - combined into single field
+✅ Q1 < Q2 < Q3 < Q4 < Q5 - correct quantity band logic
+
+═══════════════════════════════════════════════════════════════
+
+🎯 SUMMARY
+----------
+
+Frontend: ✅ Running (http://localhost:3000)
+Backend: ⏳ Needs deployment to Google Apps Script
+SOP_Cal: ⏳ Optional - import CSV for full functionality
+
+The ONLY thing blocking target dates is Apps Script deployment!
+
+═══════════════════════════════════════════════════════════════
+
+Need help? Check these files:
+- DEBUG_TARGET_DATES.md - Detailed troubleshooting
+- PRODUCT_TYPE_CONDITIONAL_FLOW.md - How Product Type works
+- DEPLOY_CORRECTED_SOP_CAL.txt - SOP_Cal import guide
+
+═══════════════════════════════════════════════════════════════

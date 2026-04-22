@@ -1,0 +1,69 @@
+🚨 SEWING SHOWS 0 DAYS - QUICK FIX (2 MINUTES)
+
+═══════════════════════════════════════════════════════════════════
+
+THE PROBLEM:
+Your SOP_Cal table is missing the Sewing rows for Garment Wash orders.
+
+THE SOLUTION:
+Run a script to add the missing rows automatically.
+
+═══════════════════════════════════════════════════════════════════
+
+STEP 1: Open Google Apps Script
+→ Go to your Google Sheet
+→ Extensions → Apps Script
+
+STEP 2: Add the Fix Script
+→ Click + next to "Files"
+→ Name it: AddRows.gs
+→ Copy ALL content from: vsm-app/google-apps-script/ADD_MISSING_SOP_ROWS.gs
+→ Paste into AddRows.gs
+→ Save (Ctrl+S)
+
+STEP 3: Run the Script
+→ Select function: addMissingSewingRows (dropdown at top)
+→ Click "Run" ▶️
+→ Click "View" → "Logs"
+
+STEP 4: Check the Logs
+You should see:
+✅ Added: Sewing | Garment Wash | Q1 | 4.85 days
+✅ Added: Sewing | Garment Wash | Q2 | 5.35 days
+✅ Added: Sewing | Garment Wash | Q3 | 5.35 days
+✅ Added: Sewing | Garment Wash | Q4 | 6.15 days
+✅ Added: Sewing | Garment Wash | Q5 | 6.35 days
+
+Total rows added: 5
+
+STEP 5: Test Again
+→ Refresh your browser at http://localhost:3000
+→ Test with Q2 order (1360 qty)
+→ Sewing should now show 5.35 days (not 0)
+
+═══════════════════════════════════════════════════════════════════
+
+ALTERNATIVE: Add Complete Data for All Processes
+
+If you want to add SOP data for ALL processes (not just Sewing):
+
+→ Select function: addCompleteSopData
+→ Click "Run" ▶️
+
+This will add 47 rows covering all 11 processes with all quantity bands.
+
+═══════════════════════════════════════════════════════════════════
+
+EXPECTED RESULT:
+
+Before:
+7. Sewing: 0 days        ❌
+Total SOP LT: 7.4 days   ❌
+
+After:
+7. Sewing: 5.35 days     ✅
+Total SOP LT: 12.75 days ✅
+
+═══════════════════════════════════════════════════════════════════
+
+DO THIS NOW! It takes 2 minutes.

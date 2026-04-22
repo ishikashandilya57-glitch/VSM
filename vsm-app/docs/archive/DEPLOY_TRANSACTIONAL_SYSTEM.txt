@@ -1,0 +1,152 @@
+═══════════════════════════════════════════════════════════════
+  DEPLOY TRANSACTIONAL SYSTEM - SIMPLE STEPS
+═══════════════════════════════════════════════════════════════
+
+✨ WHAT THIS ADDS:
+   - Daily quantity tracking for Cutting, Sewing, Finishing
+   - Automatic cumulative calculation
+   - WIP (Work In Progress) tracking
+   - Completion status automation
+
+═══════════════════════════════════════════════════════════════
+
+📋 STEP 1: ADD COLUMN HEADERS IN VSM_EXECUTION SHEET
+
+Open your VSM_Execution sheet and add these headers:
+
+Column AR: ENTRY_DATE
+Column AS: QTY_ACHIEVED_TODAY
+Column AT: ORDER_QTY
+Column AU: CUM_ACHIEVED
+Column AV: WIP_QTY
+Column AW: COMPLETION_STATUS
+
+═══════════════════════════════════════════════════════════════
+
+🚀 STEP 2: DEPLOY APPS SCRIPT
+
+1. Open: Code_WithCalculations_FIXED_V2.gs (already open in editor)
+2. Select All: Ctrl+A
+3. Copy: Ctrl+C
+4. Go to Google Apps Script (Extensions → Apps Script)
+5. Select All in editor: Ctrl+A
+6. Paste: Ctrl+V
+7. Save: Ctrl+S
+8. Deploy:
+   - Click "Deploy" → "Manage deployments"
+   - Click pencil icon (✏️)
+   - Version: "New version"
+   - Description: "Transactional system + revised delivery date"
+   - Click "Deploy"
+
+═══════════════════════════════════════════════════════════════
+
+✅ STEP 3: DONE!
+
+That's it! The formulas will be added automatically by the code.
+
+You DON'T need to:
+❌ Manually add formulas to cells
+❌ Copy formulas down
+❌ Set up any triggers
+
+The code handles everything automatically!
+
+═══════════════════════════════════════════════════════════════
+
+🧪 STEP 4: TEST
+
+1. Open: http://localhost:3001
+2. Select:
+   - OC NO: Any OC number
+   - Process: Cutting
+3. You should see:
+   - "Current Progress" box showing order qty, achieved, WIP
+   - "Quantity Achieved Today" field (green box)
+   - "Entry Date" field (not "Actual Start/End")
+4. Enter:
+   - Entry Date: Today's date
+   - Qty Achieved Today: 300
+5. Click Save
+6. Check VSM_Execution sheet:
+   - New row created
+   - Column AS: 300
+   - Column AU: Should show 300 (formula calculated)
+   - Column AV: Should show remaining WIP (formula calculated)
+   - Column AW: Should show "In Progress" (formula calculated)
+7. Click on Column AU cell - you should see formula in formula bar:
+   =SUMIFS($AS:$AS, $B:$B, B[row], $G:$G, G[row], $AR:$AR, "<="&AR[row])
+
+═══════════════════════════════════════════════════════════════
+
+📊 TEST SCENARIO: MULTIPLE DAYS
+
+Day 1:
+- OC NO: LC/DMN/25/12270
+- Process: Cutting
+- Date: 2026-02-01
+- Qty Today: 300
+Expected: Cum=300, WIP=1700, Status="In Progress"
+
+Day 2 (Same OC, Same Process):
+- Date: 2026-02-02
+- Qty Today: 400
+Expected: 
+- UI shows "Already Achieved: 300"
+- After save: Cum=700, WIP=1300, Status="In Progress"
+
+Day 3:
+- Date: 2026-02-03
+- Qty Today: 1300 (complete remaining)
+Expected: Cum=2000, WIP=0, Status="Completed" ✅
+
+═══════════════════════════════════════════════════════════════
+
+🎯 FEATURES INCLUDED IN THIS DEPLOYMENT:
+
+1. ✅ Transactional Process Tracking
+   - Daily entries for Cutting, Sewing, Finishing
+   - Automatic cumulative calculation
+   - WIP tracking
+
+2. ✅ Revised Delivery Date
+   - Planning can update Column G in Order_Master
+   - System uses revised date automatically
+
+3. ✅ Revised Quantity (Cutting)
+   - User enters revised quantity in Cutting
+   - All processes after Cutting use revised quantity
+
+4. ✅ Holiday Calendar
+   - Working days calculation
+   - Reads from "Holidays" sheet
+
+5. ✅ Supermarket Calculations
+   - SM1-SM5 included in timeline
+
+6. ✅ VA/NNVA/NVA Breakdown
+   - From SOP_Cal columns K, L, M
+
+═══════════════════════════════════════════════════════════════
+
+❓ TROUBLESHOOTING:
+
+Problem: Formulas not appearing
+Solution: Check Apps Script logs (View → Logs)
+         Look for: "✅ Formulas added for transactional process"
+
+Problem: Cumulative not calculating correctly
+Solution: Check that OC_NO and PROCESS_STAGE match exactly
+         Formula is case-sensitive
+
+Problem: UI not showing current progress
+Solution: Make sure Apps Script is deployed
+         Check browser console (F12) for errors
+
+═══════════════════════════════════════════════════════════════
+
+✅ READY TO DEPLOY!
+
+This is a major upgrade to industry-standard production tracking.
+
+═══════════════════════════════════════════════════════════════

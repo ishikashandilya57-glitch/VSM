@@ -1,0 +1,146 @@
+═══════════════════════════════════════════════════════════════
+🚨 WHY TARGET DATES SHOW "N/A" - SIMPLE EXPLANATION
+═══════════════════════════════════════════════════════════════
+
+THE PROBLEM:
+------------
+Your frontend (website) is trying to call Google Apps Script.
+But the Apps Script code is NOT on Google's servers yet.
+It's like calling a phone number that doesn't exist.
+
+THE SOLUTION:
+-------------
+You must UPLOAD the code to Google Apps Script.
+This is a MANUAL step - I cannot do it for you.
+
+═══════════════════════════════════════════════════════════════
+📋 EXACT STEPS TO FIX (5 MINUTES)
+═══════════════════════════════════════════════════════════════
+
+STEP 1: Open Google Sheet
+--------------------------
+Click this link:
+https://docs.google.com/spreadsheets/d/1pf9L-WLSelHmFG2aGE891hScLTSRAmcvI16T7YLpmI0
+
+STEP 2: Open Apps Script
+-------------------------
+At the top menu, click:
+Extensions → Apps Script
+
+A new tab will open with code editor.
+
+STEP 3: Delete Old Code
+------------------------
+You'll see a file called "Code.gs" with some code.
+Press: Ctrl+A (select all)
+Press: Delete (delete it all)
+
+STEP 4: Copy New Code
+----------------------
+On your computer, open this file:
+C:\Users\tejas\OneDrive\Documents\GitHub\VSM\vsm-app\google-apps-script\Code_WithCalculations_FIXED_V2.gs
+
+Press: Ctrl+A (select all)
+Press: Ctrl+C (copy)
+
+STEP 5: Paste New Code
+-----------------------
+Go back to the Apps Script tab (Code.gs should be empty now)
+Press: Ctrl+V (paste)
+
+You should see a LOT of code appear.
+
+STEP 6: Save
+------------
+Press: Ctrl+S
+OR click the disk icon 💾
+
+Wait for "Saved" message to appear.
+
+STEP 7: Deploy
+--------------
+At the top right, click: Deploy → New deployment
+
+A dialog will appear.
+
+STEP 8: Select Type
+-------------------
+Click the gear icon ⚙️ next to "Select type"
+Choose: Web app
+
+STEP 9: Configure
+-----------------
+Fill in:
+- Description: "VSM System"
+- Execute as: Me (your email will show)
+- Who has access: Anyone
+
+Click: Deploy
+
+STEP 10: Authorize (if asked)
+------------------------------
+If Google asks you to authorize:
+- Click: Authorize access
+- Choose your Google account
+- Click: Advanced
+- Click: Go to VSM System (unsafe)
+- Click: Allow
+
+STEP 11: Copy URL
+-----------------
+After deployment, you'll see a URL like:
+https://script.google.com/macros/s/AKfycbw.../exec
+
+Click: Copy
+
+STEP 12: Done!
+--------------
+Close the Apps Script tab.
+Go back to your app: http://localhost:3000
+Refresh the page (F5)
+Select OC and Process - target dates should appear!
+
+═══════════════════════════════════════════════════════════════
+🧪 TEST IF IT WORKED
+═══════════════════════════════════════════════════════════════
+
+Open: vsm-app/TEST_APPS_SCRIPT_URL.html
+Click: Test Connection
+
+If you see ✅ SUCCESS - it worked!
+If you see ❌ FETCH FAILED - deployment didn't work, try again.
+
+═══════════════════════════════════════════════════════════════
+❓ COMMON QUESTIONS
+═══════════════════════════════════════════════════════════════
+
+Q: Why can't you do this for me?
+A: Apps Script deployment requires access to YOUR Google account.
+   I don't have access to your account, so you must do it manually.
+
+Q: I deployed but still getting errors?
+A: Make sure you:
+   1. Copied ALL the code (it's very long - 1500+ lines)
+   2. Saved before deploying (Ctrl+S)
+   3. Chose "Web app" as deployment type
+   4. Set "Who has access" to "Anyone"
+
+Q: Do I need to update .env.local?
+A: Only if you got a NEW deployment URL (different from current one).
+   Current URL in .env.local:
+   https://script.google.com/macros/s/AKfycbwAfVUwR5IXcpfG9Wa6wRAaKsG2_Xeu_-UXyuk_1kt3t9jxpZeq9V8OPBzSqZeoUIaW/exec
+
+═══════════════════════════════════════════════════════════════
+🎯 SUMMARY
+═══════════════════════════════════════════════════════════════
+
+Frontend: ✅ Working (http://localhost:3000)
+Backend Code: ✅ Ready (Code_WithCalculations_FIXED_V2.gs)
+Backend Deployed: ❌ NOT YET - YOU MUST DO THIS MANUALLY
+
+The ONLY thing stopping target dates from working is:
+Apps Script is not deployed to Google's servers.
+
+This is a 5-minute manual task that MUST be done in Google's web interface.
+
+═══════════════════════════════════════════════════════════════

@@ -1,0 +1,130 @@
+═══════════════════════════════════════════════════════════════
+  📋 WHAT TO DEPLOY NOW - SIMPLE ANSWER
+═══════════════════════════════════════════════════════════════
+
+YOU NEED TO DEPLOY:
+1. Frontend (Inspection update) - Just restart dev server
+2. Apps Script (Your existing code) - NO changes needed if working
+
+═══════════════════════════════════════════════════════════════
+  OPTION 1: JUST INSPECTION UPDATE (1 MINUTE)
+═══════════════════════════════════════════════════════════════
+
+IF your system is already working, just do this:
+
+STEP 1: Restart Dev Server
+────────────────────────────────────────────────────────────────
+npm run dev
+
+THAT'S IT!
+
+This deploys the Inspection 10% tracking update.
+
+═══════════════════════════════════════════════════════════════
+  OPTION 2: FULL SYSTEM (IF YOU WANT EVERYTHING)
+═══════════════════════════════════════════════════════════════
+
+IF you want ALL the new features (process sequence, completion
+fix, archival, performance), follow this:
+
+STEP 1: Open Google Apps Script
+────────────────────────────────────────────────────────────────
+1. Go to your Google Sheet
+2. Extensions → Apps Script
+3. Open: Code_WithCalculations_FIXED_V2.gs
+
+STEP 2: Make These Changes
+────────────────────────────────────────────────────────────────
+
+CHANGE #1: Fix Completion Status (Line ~1221)
+FIND:
+  rowData[COL.ACTUAL_END - 1] = '';
+
+CHANGE TO:
+  rowData[COL.ACTUAL_END - 1] = actualDates.actualEnd || '';
+
+CHANGE #2: Add Process Status Function
+COPY from: google-apps-script/PROCESS_STATUS_ENDPOINT.gs
+PASTE at: END of your Code_WithCalculations_FIXED_V2.gs
+
+CHANGE #3: Update doGet() Function
+ADD this code inside your doGet() function:
+
+  if (action === 'getProcessStatus') {
+    const ocNo = e.parameter.ocNo;
+    if (!ocNo) {
+      return ContentService.createTextOutput(JSON.stringify({
+        success: false,
+        error: 'OC Number is required'
+      })).setMimeType(ContentService.MimeType.JSON);
+    }
+    const result = getProcessStatus(ocNo);
+    return ContentService.createTextOutput(JSON.stringify(result))
+      .setMimeType(ContentService.MimeType.JSON);
+  }
+
+STEP 3: Save and Deploy
+────────────────────────────────────────────────────────────────
+1. Save (Ctrl+S)
+2. Deploy → Manage deployments → Edit → New version → Deploy
+
+STEP 4: Restart Frontend
+────────────────────────────────────────────────────────────────
+npm run dev
+
+═══════════════════════════════════════════════════════════════
+  WHAT EACH OPTION GIVES YOU
+═══════════════════════════════════════════════════════════════
+
+OPTION 1 (1 minute):
+✅ Inspection 10% tracking
+✅ Cumulative received quantity
+✅ Auto-suggested 10% sample
+
+OPTION 2 (30 minutes):
+✅ Everything from Option 1, PLUS:
+✅ Process sequence enforcement
+✅ Completion status fix
+✅ Visual indicators (✓ ⏳ 🔓)
+✅ Department isolation
+
+═══════════════════════════════════════════════════════════════
+  RECOMMENDATION
+═══════════════════════════════════════════════════════════════
+
+IF your system is working fine:
+→ Do OPTION 1 (just restart dev server)
+
+IF you want the new features:
+→ Do OPTION 2 (follow EASIEST_DEPLOYMENT_GUIDE.txt)
+
+═══════════════════════════════════════════════════════════════
+  DETAILED GUIDES
+═══════════════════════════════════════════════════════════════
+
+For Option 1:
+  Just run: npm run dev
+
+For Option 2:
+  Follow: EASIEST_DEPLOYMENT_GUIDE.txt (10 min)
+  Or: DEPLOY_ALL_THREE_FEATURES.txt (30 min)
+
+For Performance:
+  Follow: DEPLOY_PHASE_1_OPTIMIZATIONS.txt (2-3 hours)
+
+═══════════════════════════════════════════════════════════════
+  SUMMARY
+═══════════════════════════════════════════════════════════════
+
+MINIMUM (1 min):
+  npm run dev
+
+RECOMMENDED (30 min):
+  Follow EASIEST_DEPLOYMENT_GUIDE.txt
+
+FULL OPTIMIZATION (3 hours):
+  Follow DEPLOY_PHASE_1_OPTIMIZATIONS.txt
+
+═══════════════════════════════════════════════════════════════
+  Start with Option 1, then do Option 2 when ready!
+═══════════════════════════════════════════════════════════════

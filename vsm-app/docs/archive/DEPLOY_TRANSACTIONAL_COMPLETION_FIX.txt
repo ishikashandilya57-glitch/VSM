@@ -1,0 +1,151 @@
+═══════════════════════════════════════════════════════════════
+  🔧 DEPLOY: Transactional Process Completion Status Fix
+═══════════════════════════════════════════════════════════════
+
+PROBLEM:
+Cutting, Sewing, Washing, Finishing, Inspection show "In Progress"
+even when fully completed (cumulative qty = order qty)
+
+SOLUTION:
+Use actual end date from getActualDates() when WIP = 0
+
+───────────────────────────────────────────────────────────────
+CRITICAL CHANGE (ONE LINE!)
+───────────────────────────────────────────────────────────────
+
+In your Code_WithCalculations_FIXED_V2.gs file, around line 1221:
+
+BEFORE (WRONG):
+  rowData[COL.ACTUAL_END - 1] = ''; // ❌ Always empty!
+
+AFTER (CORRECT):
+  rowData[COL.ACTUAL_END - 1] = actualDates.actualEnd || ''; // ✅
+
+───────────────────────────────────────────────────────────────
+STEP-BY-STEP DEPLOYMENT
+───────────────────────────────────────────────────────────────
+
+1. Open Google Apps Script Editor
+
+2. Find the section in doPost() where transactional processes are handled
+   (Search for "isTransactionalProcess" or "Cutting, Sewing")
+
+3. Locate this line:
+   rowData[COL.ACTUAL_END - 1] = '';
+
+4. Change it to:
+   rowData[COL.ACTUAL_END - 1] = actualDates.actualEnd || '';
+
+5. Verify getActualDates() function exists
+   (It should already be in your script)
+
+6. Save the script
+
+7. Deploy as new version:
+   - Click "Deploy" → "Manage deployments"
+   - Click "Edit" (pencil icon)
+   - Select "New version"
+   - Click "Deploy"
+
+8. Restart dev server:
+   npm run dev
+
+───────────────────────────────────────────────────────────────
+HOW IT WORKS
+───────────────────────────────────────────────────────────────
+
+For Transactional Processes (Cutting, Sewing, etc.):
+
+1. User enters daily quantities
+2. System calculates:
+   - CUM_ACHIEVED = SUMIFS of all quantities
+   - WIP_QTY = ORDER_QTY - CUM_ACHIEVED
+
+3. When WIP_QTY <= 0:
+   - getActualDates() finds the last entry date
+   - This date is set as Actual End Date
+   - Status is calculated: "Completed - On Time" or "Completed - Delayed"
+
+───────────────────────────────────────────────────────────────
+TESTING
+───────────────────────────────────────────────────────────────
+
+Test Case: Cutting Process
+Order Qty: 1000 pieces
+Target End: Jan 20, 2026
+
+Day 1 (Jan 15): Enter 400 pieces
+  → CUM: 400, WIP: 600
+  → Status: "In Progress" ✓
+
+Day 2 (Jan 18): Enter 400 pieces
+  → CUM: 800, WIP: 200
+  → Status: "In Progress" ✓
+
+Day 3 (Jan 19): Enter 200 pieces
+  → CUM: 1000, WIP: 0
+  → Actual End: Jan 19
+  → Status: "Completed - On Time" ✅
+
+Day 4 (Jan 22): Enter 300 pieces (over-production)
+  → CUM: 1300, WIP: 0
+  → Actual End: Jan 19 (first time WIP=0)
+  → Status: "Completed - On Time" ✅
+
+───────────────────────────────────────────────────────────────
+VERIFICATION
+───────────────────────────────────────────────────────────────
+
+After deployment, check:
+
+1. ✅ Transactional processes show "Completed" when WIP = 0
+2. ✅ Actual End Date is set automatically
+3. ✅ Status shows "On Time" or "Delayed" correctly
+4. ✅ Dashboard displays correct status
+5. ✅ Process sequence enforcement recognizes completion
+
+───────────────────────────────────────────────────────────────
+TROUBLESHOOTING
+───────────────────────────────────────────────────────────────
+
+Issue: Still showing "In Progress" after WIP = 0
+Fix: 
+  - Check Apps Script logs for errors
+  - Verify COL.WIP_QTY = 48 (Column AV)
+  - Verify COL.ENTRY_DATE = 44 (Column AR)
+  - Check WIP formula in sheet: =MAX(0, AT-AU)
+
+Issue: Actual End Date not set
+Fix:
+  - Verify getActualDates() function exists
+  - Check that actualDates.actualEnd is being used (not '')
+  - Look at Apps Script logs for "Last End (WIP=0)"
+
+Issue: Wrong completion date
+Fix:
+  - getActualDates() finds LAST date where WIP = 0
+  - If multiple entries after completion, uses latest
+  - Check ENTRY_DATE column has correct dates
+
+───────────────────────────────────────────────────────────────
+REFERENCE FILES
+───────────────────────────────────────────────────────────────
+
+📖 FIX_TRANSACTIONAL_PROCESS_COMPLETION.md - Detailed explanation
+📖 google-apps-script/FIX_TRANSACTIONAL_COMPLETION_STATUS.gs - Code
+📖 FIX_PROCESS_STATUS_LOGIC.md - Original status fix
+
+───────────────────────────────────────────────────────────────
+SUMMARY
+───────────────────────────────────────────────────────────────
+
+ONE LINE CHANGE:
+  rowData[COL.ACTUAL_END - 1] = actualDates.actualEnd || '';
+
+RESULT:
+  Transactional processes show "Completed" when all quantities
+  are achieved, with correct "On Time" or "Delayed" status!
+
+═══════════════════════════════════════════════════════════════
+  Deploy this one-line fix and test! 🚀
+═══════════════════════════════════════════════════════════════

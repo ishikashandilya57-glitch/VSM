@@ -1,0 +1,210 @@
+═══════════════════════════════════════════════════════════════
+  📁 ONE FILE DEPLOYMENT - VISUAL EXPLANATION
+═══════════════════════════════════════════════════════════════
+
+QUESTION: Do I need to deploy multiple files?
+ANSWER: NO! You only edit ONE file in Google Apps Script.
+
+═══════════════════════════════════════════════════════════════
+  YOUR GOOGLE APPS SCRIPT
+═══════════════════════════════════════════════════════════════
+
+When you open Apps Script, you see:
+
+┌─────────────────────────────────────────────────────────────┐
+│ Google Apps Script Editor                                   │
+├─────────────────────────────────────────────────────────────┤
+│                                                             │
+│ Files:                                                      │
+│   📄 Code_WithCalculations_FIXED_V2.gs  ← THIS ONE!        │
+│                                                             │
+│ This is your ONLY file.                                    │
+│ All changes go into THIS file.                             │
+│                                                             │
+└─────────────────────────────────────────────────────────────┘
+
+═══════════════════════════════════════════════════════════════
+  THE REFERENCE FILES (IN YOUR PROJECT FOLDER)
+═══════════════════════════════════════════════════════════════
+
+In your vsm-app/google-apps-script/ folder, you have:
+
+┌─────────────────────────────────────────────────────────────┐
+│ vsm-app/google-apps-script/                                 │
+├─────────────────────────────────────────────────────────────┤
+│   📄 PROCESS_STATUS_ENDPOINT.gs       ← REFERENCE ONLY     │
+│   📄 FIX_TRANSACTIONAL_COMPLETION_STATUS.gs ← REFERENCE     │
+│   📄 ORDER_ARCHIVAL.gs                ← REFERENCE ONLY      │
+│   📄 CACHING_SYSTEM.gs                ← REFERENCE ONLY      │
+│   📄 ERROR_HANDLING.gs                ← REFERENCE ONLY      │
+│                                                             │
+│ These are NOT separate files to deploy!                    │
+│ These are REFERENCE files to COPY FROM.                    │
+│                                                             │
+└─────────────────────────────────────────────────────────────┘
+
+═══════════════════════════════════════════════════════════════
+  HOW IT WORKS
+═══════════════════════════════════════════════════════════════
+
+STEP 1: Open reference file
+┌─────────────────────────────────────────────────────────────┐
+│ Open: google-apps-script/PROCESS_STATUS_ENDPOINT.gs        │
+│                                                             │
+│ function getProcessStatus(ocNo) {                           │
+│   // ... code here ...                                      │
+│ }                                                           │
+│                                                             │
+│ SELECT ALL → COPY (Ctrl+C)                                 │
+└─────────────────────────────────────────────────────────────┘
+
+STEP 2: Paste into your main file
+┌─────────────────────────────────────────────────────────────┐
+│ Open: Google Apps Script                                   │
+│ File: Code_WithCalculations_FIXED_V2.gs                    │
+│                                                             │
+│ // Your existing code...                                   │
+│ // ... lots of code ...                                    │
+│ // ... more code ...                                       │
+│                                                             │
+│ // SCROLL TO THE VERY END                                  │
+│                                                             │
+│ // PASTE HERE (Ctrl+V)                                     │
+│ function getProcessStatus(ocNo) {                           │
+│   // ... code here ...                                      │
+│ }                                                           │
+│                                                             │
+└─────────────────────────────────────────────────────────────┘
+
+STEP 3: Save and deploy ONCE
+┌─────────────────────────────────────────────────────────────┐
+│ Save (Ctrl+S)                                               │
+│ Deploy → Manage deployments → Edit → New version → Deploy  │
+│                                                             │
+│ DONE! All changes deployed in ONE file.                    │
+└─────────────────────────────────────────────────────────────┘
+
+═══════════════════════════════════════════════════════════════
+  VISUAL DIAGRAM
+═══════════════════════════════════════════════════════════════
+
+REFERENCE FILES (Your Computer)
+    ↓ COPY CODE FROM
+    ↓
+┌───────────────────────────────────────────────────────────┐
+│ MAIN FILE (Google Apps Script)                            │
+│                                                           │
+│ Code_WithCalculations_FIXED_V2.gs                        │
+│                                                           │
+│ ┌─────────────────────────────────────────────────────┐  │
+│ │ Your existing code (don't delete!)                  │  │
+│ │ - doGet() function                                  │  │
+│ │ - doPost() function                                 │  │
+│ │ - All your calculations                             │  │
+│ │ - All your helper functions                         │  │
+│ └─────────────────────────────────────────────────────┘  │
+│                                                           │
+│ ┌─────────────────────────────────────────────────────┐  │
+│ │ NEW CODE (paste at the end)                         │  │
+│ │ - getProcessStatus() function                       │  │
+│ │ - archiveOldOrders() function (optional)            │  │
+│ │ - getCachedData() function (optional)               │  │
+│ │ - Error handling functions (optional)               │  │
+│ └─────────────────────────────────────────────────────┘  │
+│                                                           │
+└───────────────────────────────────────────────────────────┘
+    ↓ DEPLOY ONCE
+    ↓
+  ✅ ALL FEATURES DEPLOYED!
+
+═══════════════════════════════════════════════════════════════
+  WHAT TO COPY
+═══════════════════════════════════════════════════════════════
+
+REQUIRED (10 minutes):
+┌─────────────────────────────────────────────────────────────┐
+│ 1. Change 1 line (completion status fix)                   │
+│    Find line ~1221, change '' to actualDates.actualEnd     │
+│                                                             │
+│ 2. Copy getProcessStatus() function                        │
+│    From: PROCESS_STATUS_ENDPOINT.gs                        │
+│    Paste: End of your main file                            │
+│                                                             │
+│ 3. Update doGet() function                                 │
+│    Add: if (action === 'getProcessStatus') { ... }         │
+│    Inside: Your existing doGet() function                  │
+└─────────────────────────────────────────────────────────────┘
+
+OPTIONAL (15 minutes more):
+┌─────────────────────────────────────────────────────────────┐
+│ 4. Copy archival functions                                 │
+│    From: ORDER_ARCHIVAL.gs                                 │
+│    Paste: End of your main file                            │
+│                                                             │
+│ 5. Copy caching functions                                  │
+│    From: CACHING_SYSTEM.gs                                 │
+│    Paste: End of your main file                            │
+│                                                             │
+│ 6. Copy error handling functions                           │
+│    From: ERROR_HANDLING.gs                                 │
+│    Paste: End of your main file                            │
+└─────────────────────────────────────────────────────────────┘
+
+═══════════════════════════════════════════════════════════════
+  IMPORTANT NOTES
+═══════════════════════════════════════════════════════════════
+
+✅ DO:
+- Edit Code_WithCalculations_FIXED_V2.gs in Google Apps Script
+- Copy code from reference files
+- Paste at the END of your main file
+- Keep all your existing code
+- Deploy ONCE after all changes
+
+❌ DON'T:
+- Create new files in Google Apps Script
+- Delete your existing code
+- Deploy multiple times
+- Upload the reference files to Apps Script
+
+═══════════════════════════════════════════════════════════════
+  ANALOGY
+═══════════════════════════════════════════════════════════════
+
+Think of it like a recipe book:
+
+📚 Reference Files = Recipe Book
+   - You READ the recipes
+   - You DON'T cook the book!
+
+🍳 Main File = Your Kitchen
+   - You COOK here
+   - You ADD ingredients from recipes
+   - Everything goes into ONE pot
+
+═══════════════════════════════════════════════════════════════
+  QUICK START
+═══════════════════════════════════════════════════════════════
+
+1. Open: Google Apps Script
+2. File: Code_WithCalculations_FIXED_V2.gs
+3. Make 3 changes (see EASIEST_DEPLOYMENT_GUIDE.txt)
+4. Save
+5. Deploy
+6. Done!
+
+═══════════════════════════════════════════════════════════════
+  SUMMARY
+═══════════════════════════════════════════════════════════════
+
+ONE FILE:     Code_WithCalculations_FIXED_V2.gs
+ONE LOCATION: Google Apps Script
+ONE DEPLOYMENT: After all changes
+
+Reference files are just for COPYING code from.
+All code goes into ONE main file.
+Deploy ONCE.
+
+═══════════════════════════════════════════════════════════════
+  Clear now? Follow: EASIEST_DEPLOYMENT_GUIDE.txt
+═══════════════════════════════════════════════════════════════

@@ -1,0 +1,107 @@
+🚨 URGENT: YOUR SYSTEM IS STILL RUNNING OLD CODE 🚨
+
+PROOF: You're seeing "All Process Stages (67)" instead of "All Process Stages (11)"
+
+═══════════════════════════════════════════════════════════════════
+
+📋 DO THESE 7 STEPS IN ORDER (NO SHORTCUTS):
+
+═══════════════════════════════════════════════════════════════════
+
+STEP 1: Open Google Apps Script Editor
+        → Go to your Google Sheet
+        → Extensions → Apps Script
+
+STEP 2: DELETE OLD FILES
+        → Look at left sidebar
+        → Delete these files:
+          ❌ Code_WithCalculations.gs
+          ❌ Code_WithCalculations_FIXED.gs
+          ❌ Any other .gs files
+
+STEP 3: CREATE NEW FILE
+        → Click + next to "Files"
+        → Name it: Code.gs
+        → Copy ENTIRE content from:
+          vsm-app/google-apps-script/Code_WithCalculations_FIXED_V2.gs
+        → Paste into Code.gs
+        → Save (Ctrl+S)
+
+STEP 4: DELETE OLD DEPLOYMENTS (CRITICAL!)
+        → Click "Deploy" button (top right)
+        → Click "Manage deployments"
+        → For EACH deployment:
+          - Click ⋮ (three dots)
+          - Click "Archive"
+        → Close dialog
+
+STEP 5: CREATE NEW DEPLOYMENT
+        → Click "Deploy" → "New deployment"
+        → Click gear icon ⚙️ → Select "Web app"
+        → Execute as: Me
+        → Who has access: Anyone
+        → Click "Deploy"
+        → COPY THE NEW URL (it's different!)
+
+STEP 6: UPDATE .ENV.LOCAL
+        → Open: vsm-app/.env.local
+        → Replace URL with new one:
+          NEXT_PUBLIC_GOOGLE_APPS_SCRIPT_URL=YOUR_NEW_URL
+        → Save
+
+STEP 7: RESTART DEV SERVER
+        → Press Ctrl+C in terminal
+        → Run: npm run dev
+        → Go to http://localhost:3000
+        → Test the form
+
+═══════════════════════════════════════════════════════════════════
+
+✅ HOW TO VERIFY IT WORKED:
+
+═══════════════════════════════════════════════════════════════════
+
+1. Fill in form with Process Stage = "Inspection"
+2. Look at "Calculation Steps" panel
+3. You should see:
+
+   ✅ CORRECT:
+   📊 All Process Stages (11):
+     1. Fabric Inhouse
+     2. Fabric QC
+     ... (11 total)
+   
+   📈 Remaining Processes (2):
+     10. Inspection: 2.5 days
+     11. Dispatch: 1.7 days
+
+   ❌ WRONG (if you see this, you didn't follow steps):
+   📊 All Process Stages (67):
+     ... lots of repeated stages ...
+   
+   📈 Remaining Processes (10):
+     10. Inspection: 2.5 days (repeated 5 times)
+     11. Dispatch: 1.7 days (repeated 5 times)
+
+═══════════════════════════════════════════════════════════════════
+
+🔥 IF IT STILL SHOWS 67 STAGES:
+
+═══════════════════════════════════════════════════════════════════
+
+The system will now CRASH with this error:
+"CRITICAL BUG: Expected 11 process stages, got 67"
+
+This means you DIDN'T:
+- Delete old files from Apps Script
+- Delete old deployments
+- Use the new Web App URL
+
+→ GO BACK TO STEP 1 AND DO IT AGAIN
+
+═══════════════════════════════════════════════════════════════════
+
+The file to copy is ready: Code_WithCalculations_FIXED_V2.gs
+It has the hard assert that will force a crash if wrong.
+
+DO IT NOW! 🚀

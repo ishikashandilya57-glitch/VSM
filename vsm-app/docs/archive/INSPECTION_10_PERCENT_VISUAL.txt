@@ -1,0 +1,224 @@
+═══════════════════════════════════════════════════════════════
+  ✅ INSPECTION - 10% SAMPLE TRACKING (VISUAL GUIDE)
+═══════════════════════════════════════════════════════════════
+
+KEY CONCEPT:
+Inspection = 10% SAMPLE of received quantity
+BUT we track CUMULATIVE RECEIVED quantity from Finishing
+
+═══════════════════════════════════════════════════════════════
+  COMPLETE UI FLOW
+═══════════════════════════════════════════════════════════════
+
+STEP 1: Current Progress Display (Before Entry)
+┌─────────────────────────────────────────────────────────────┐
+│ 📊 Current Inspection Progress                              │
+│                                                             │
+│ ┌─────────────────┬─────────────────┬─────────────────┐    │
+│ │ Total Received  │ Already Inspected│   Remaining    │    │
+│ │      500        │       50         │      450       │    │
+│ │ from Finishing  │ 10% sample       │ yet to inspect │    │
+│ │  (cumulative)   │   checked        │                │    │
+│ └─────────────────┴─────────────────┴─────────────────┘    │
+└─────────────────────────────────────────────────────────────┘
+
+STEP 2: Enter Received Quantity
+┌─────────────────────────────────────────────────────────────┐
+│ 📥 Quantity Received TODAY from Finishing *                 │
+│ ┌─────────────────────────────────────────────────────────┐ │
+│ │ 300                                                     │ │
+│ └─────────────────────────────────────────────────────────┘ │
+│                                                             │
+│ After this entry:                                           │
+│ Cumulative Received: 800 (500 + 300)                       │
+│                                                             │
+│ ℹ️ This tracks cumulative quantity from Finishing dept     │
+└─────────────────────────────────────────────────────────────┘
+
+STEP 3: Enter Inspected Quantity (10% Sample)
+┌─────────────────────────────────────────────────────────────┐
+│ ✅ Quantity Inspected TODAY (10% Sample) *                  │
+│ ┌─────────────────────────────────────────────────────────┐ │
+│ │ 30                                                      │ │
+│ └─────────────────────────────────────────────────────────┘ │
+│                                                             │
+│ 💡 Suggested 10% Sample: 30 pieces                         │
+│ (10% of 300 received today)                                │
+│                                                             │
+│ After this entry:                                           │
+│ ┌─────────────────────────────────────────────────────────┐ │
+│ │ Total Received: 800  │  Total Inspected: 80  │  Rem: 720││
+│ └─────────────────────────────────────────────────────────┘ │
+│                                                             │
+│ ℹ️ Inspection is done on 10% sample. Creates new entry.    │
+└─────────────────────────────────────────────────────────────┘
+
+═══════════════════════════════════════════════════════════════
+  DAY-BY-DAY EXAMPLE (Order Qty: 1000)
+═══════════════════════════════════════════════════════════════
+
+DAY 1 (Monday):
+┌─────────────────────────────────────────────────────────────┐
+│ Finishing sends: 500 pieces                                 │
+│                                                             │
+│ INSPECTION ENTRY:                                           │
+│ ├─ Received TODAY: 500                                     │
+│ ├─ Inspected TODAY: 50 (10% of 500)                        │
+│ │                                                           │
+│ └─ CUMULATIVE TRACKING:                                    │
+│    ├─ Total Received: 500                                  │
+│    ├─ Total Inspected: 50                                  │
+│    └─ Remaining: 500                                       │
+└─────────────────────────────────────────────────────────────┘
+
+DAY 2 (Tuesday):
+┌─────────────────────────────────────────────────────────────┐
+│ Finishing sends: 300 pieces                                 │
+│                                                             │
+│ INSPECTION ENTRY:                                           │
+│ ├─ Received TODAY: 300                                     │
+│ ├─ Inspected TODAY: 30 (10% of 300)                        │
+│ │                                                           │
+│ └─ CUMULATIVE TRACKING:                                    │
+│    ├─ Total Received: 800 (500 + 300)                      │
+│    ├─ Total Inspected: 80 (50 + 30)                        │
+│    └─ Remaining: 200                                       │
+└─────────────────────────────────────────────────────────────┘
+
+DAY 3 (Wednesday):
+┌─────────────────────────────────────────────────────────────┐
+│ Finishing sends: 200 pieces                                 │
+│                                                             │
+│ INSPECTION ENTRY:                                           │
+│ ├─ Received TODAY: 200                                     │
+│ ├─ Inspected TODAY: 20 (10% of 200)                        │
+│ │                                                           │
+│ └─ CUMULATIVE TRACKING:                                    │
+│    ├─ Total Received: 1000 (500 + 300 + 200) ✅            │
+│    ├─ Total Inspected: 100 (50 + 30 + 20) ✅               │
+│    └─ Remaining: 0 ✅ COMPLETED!                            │
+└─────────────────────────────────────────────────────────────┘
+
+═══════════════════════════════════════════════════════════════
+  TRACKING BREAKDOWN
+═══════════════════════════════════════════════════════════════
+
+RECEIVED QUANTITY (Cumulative):
+┌─────────────────────────────────────────────────────────────┐
+│ Day 1: 500                                                  │
+│ Day 2: 300                                                  │
+│ Day 3: 200                                                  │
+│ ─────────────                                               │
+│ TOTAL: 1000 ✅                                              │
+│                                                             │
+│ This tracks material flow from Finishing                   │
+└─────────────────────────────────────────────────────────────┘
+
+INSPECTED QUANTITY (Cumulative 10% Samples):
+┌─────────────────────────────────────────────────────────────┐
+│ Day 1: 50 (10% of 500)                                      │
+│ Day 2: 30 (10% of 300)                                      │
+│ Day 3: 20 (10% of 200)                                      │
+│ ─────────────                                               │
+│ TOTAL: 100 ✅                                               │
+│                                                             │
+│ This tracks actual inspection work (10% sampling)          │
+└─────────────────────────────────────────────────────────────┘
+
+═══════════════════════════════════════════════════════════════
+  AUTO-CALCULATION FEATURE
+═══════════════════════════════════════════════════════════════
+
+When you enter "Received Quantity", system suggests 10%:
+
+INPUT:
+┌─────────────────────────────────────────────────────────────┐
+│ Received TODAY: 500                                         │
+└─────────────────────────────────────────────────────────────┘
+         ↓
+AUTO-SUGGEST:
+┌─────────────────────────────────────────────────────────────┐
+│ 💡 Suggested 10% Sample: 50 pieces                         │
+│ (10% of 500 received today)                                │
+└─────────────────────────────────────────────────────────────┘
+         ↓
+YOU CAN:
+┌─────────────────────────────────────────────────────────────┐
+│ ✅ Accept: Enter 50                                         │
+│ ✅ Adjust: Enter different amount if needed                │
+└─────────────────────────────────────────────────────────────┘
+
+═══════════════════════════════════════════════════════════════
+  COMPARISON WITH OTHER PROCESSES
+═══════════════════════════════════════════════════════════════
+
+CUTTING / SEWING / WASHING / FINISHING:
+┌─────────────────────────────────────────────────────────────┐
+│ Track: Actual quantity processed                           │
+│                                                             │
+│ Example:                                                    │
+│ ├─ Cut 500 pieces → Track 500                              │
+│ ├─ Sew 300 pieces → Track 300                              │
+│ └─ Cumulative: 800                                         │
+└─────────────────────────────────────────────────────────────┘
+
+INSPECTION (DIFFERENT):
+┌─────────────────────────────────────────────────────────────┐
+│ Track: TWO separate quantities                             │
+│                                                             │
+│ Example:                                                    │
+│ ├─ Received 500 → Track 500 (material flow)                │
+│ ├─ Inspected 50 → Track 50 (10% sample)                    │
+│ │                                                           │
+│ ├─ Received 300 → Track 300 (material flow)                │
+│ ├─ Inspected 30 → Track 30 (10% sample)                    │
+│ │                                                           │
+│ └─ Cumulative:                                             │
+│    ├─ Total Received: 800                                  │
+│    └─ Total Inspected: 80                                  │
+└─────────────────────────────────────────────────────────────┘
+
+═══════════════════════════════════════════════════════════════
+  WHY TRACK BOTH?
+═══════════════════════════════════════════════════════════════
+
+1. RECEIVED QUANTITY:
+   ✅ Shows material flow from Finishing
+   ✅ Tracks what actually arrived
+   ✅ Completion = when received = order qty
+
+2. INSPECTED QUANTITY:
+   ✅ Shows actual inspection work done
+   ✅ Tracks 10% sample checking
+   ✅ Industry standard quality control
+
+3. BOTH TOGETHER:
+   ✅ Complete visibility
+   ✅ Material flow + Quality work
+   ✅ Accurate progress tracking
+
+═══════════════════════════════════════════════════════════════
+  BENEFITS
+═══════════════════════════════════════════════════════════════
+
+✅ Tracks cumulative received from Finishing
+✅ Tracks 10% sample inspection separately
+✅ Auto-suggests 10% for accuracy
+✅ Shows current progress before entry
+✅ Shows updated progress after entry
+✅ Clear visibility of remaining work
+✅ Follows industry standard (10% sampling)
+✅ Prevents manual calculation errors
+✅ Complete material flow visibility
+
+═══════════════════════════════════════════════════════════════
+  DEPLOYMENT
+═══════════════════════════════════════════════════════════════
+
+npm run dev
+
+That's it! The UI is ready.
+
+═══════════════════════════════════════════════════════════════
+  Inspection now correctly tracks received + 10% sample! ✅
+═══════════════════════════════════════════════════════════════

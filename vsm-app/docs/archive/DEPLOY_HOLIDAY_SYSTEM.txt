@@ -1,0 +1,84 @@
+🚀 DEPLOY HOLIDAY CALENDAR SYSTEM - QUICK GUIDE
+================================================
+
+STATUS: ✅ CODE READY - JUST DEPLOY!
+
+WHAT'S IMPLEMENTED:
+-------------------
+✅ Holiday loading from "Holidays" sheet
+✅ Working days calculation (skips weekends + holidays)
+✅ Saturday pattern: 1st & 5th working, 2nd/3rd/4th off
+✅ Sunday always off
+✅ Public holidays from sheet
+✅ Applied to ALL processes and supermarkets
+
+DEPLOYMENT STEPS:
+-----------------
+
+1. VERIFY HOLIDAYS SHEET
+   - Open: https://docs.google.com/spreadsheets/d/1pf9L-WLSelHmFG2aGE891hScLTSRAmcvI16T7YLpmI0
+   - Check sheet named "Holidays" exists
+   - Column A has dates
+   - Data starts row 2
+
+2. DEPLOY APPS SCRIPT
+   - Open: vsm-app/google-apps-script/Code_WithCalculations_FIXED_V2.gs
+   - Copy ALL code (Ctrl+A, Ctrl+C)
+   - Go to: https://script.google.com/home
+   - Find VSM project
+   - Paste code (Ctrl+V)
+   - Save (💾)
+   - Deploy → New deployment → Web app
+   - Description: "Holiday calendar + working days"
+   - Deploy
+   - Copy URL (update .env.local if changed)
+
+3. TEST
+   - cd vsm-app
+   - npm run dev
+   - Open: http://localhost:3000
+   - Submit test form
+   - Check console (F12) for: "📅 Holidays Loaded: X days"
+   - Verify target dates skip weekends/holidays
+
+VERIFICATION:
+-------------
+✅ Console shows "📅 Holidays Loaded: X days"
+✅ Calculation steps show "working days"
+✅ Target dates skip Sundays
+✅ Target dates skip 2nd/3rd/4th Saturdays
+✅ Target dates skip public holidays
+✅ Supermarkets (SM2, SM3, SM5) use working days
+
+EXAMPLE OUTPUT:
+---------------
+📅 Holidays Loaded: 49 days
+
+  6. Cutting:
+     Current End Date: 2026-03-30
+     Subtract SOP LT: 5 working days (VA: 1.9, NNVA: 0.8, NVA: 2.2)
+     Target Start: 2026-03-24
+     Target End: 2026-03-30
+     
+     ⏳ Supermarket 2 (Cutting WIP): 3 working days
+     New End Date after SM2: 2026-03-19
+
+TROUBLESHOOTING:
+----------------
+❌ "Holidays sheet not found"
+   → Create sheet named "Holidays" (exact match)
+
+❌ Dates not skipping holidays
+   → Check Column A has date values (not text)
+   → Redeploy Apps Script
+
+❌ Console doesn't show "Holidays Loaded"
+   → Deploy as NEW VERSION (not just save)
+   → Check Apps Script execution logs
+
+MAINTENANCE:
+------------
+✅ Add new holidays: Just update Holidays sheet (no code change!)
+✅ Change working pattern: Update isWorkingDay() function
+
+READY TO DEPLOY! 🚀

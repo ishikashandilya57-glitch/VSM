@@ -1,0 +1,88 @@
+🚨 CRITICAL: DEPLOY NEW VERSION NOW 🚨
+
+Your data IS being saved to VSM_execution, but it's using OLD CODE that causes #VALUE! errors.
+
+═══════════════════════════════════════════════════════════════
+
+📋 DEPLOYMENT STEPS (DO THIS NOW):
+
+1. Open Google Apps Script Editor:
+   https://script.google.com/home
+
+2. Find your VSM project and open it
+
+3. DELETE ALL EXISTING CODE in Code.gs
+
+4. COPY the entire content from:
+   vsm-app/google-apps-script/Code_WithCalculations_FIXED_V2.gs
+
+5. PASTE it into Code.gs
+
+6. Click SAVE (Ctrl+S)
+
+7. Deploy as NEW VERSION:
+   - Click "Deploy" → "Manage deployments"
+   - Click "Edit" (pencil icon) on existing deployment
+   - Under "Version", select "New version"
+   - Description: "Fixed Qty Band + Always New Row + Safety Guards"
+   - Click "Deploy"
+
+8. COPY the new Web App URL
+
+9. UPDATE .env.local with new URL (if it changed)
+
+═══════════════════════════════════════════════════════════════
+
+✅ WHAT THIS FIXES:
+
+- #VALUE! errors in Target Start/End Date columns
+- #VALUE! errors in calculated fields
+- SOP LT = 0 for Sewing/Washing/Finishing
+- Qty Band not being applied correctly
+- Missing safety guards and logging
+
+═══════════════════════════════════════════════════════════════
+
+🧪 AFTER DEPLOYMENT - TEST:
+
+1. Go to http://localhost:3000
+2. Fill form with:
+   - OC NO: LC/DMN/25/12270
+   - Process Stage: Sewing
+   - Line No: DBR_L1
+   - Order No: 12270
+   - Actual Start: 2026-01-20
+   - Actual End: 2026-01-25
+   - Delay Reason: (leave blank if on time)
+
+3. Submit form
+
+4. Check VSM_execution sheet:
+   - New row should appear
+   - NO #VALUE! errors
+   - Target Start/End dates should be valid dates
+   - SOP LT should be 5.35 days (for Q2 Sewing)
+   - All calculated fields should have values
+
+═══════════════════════════════════════════════════════════════
+
+⚠️ IMPORTANT NOTES:
+
+- The Web App URL might stay the same (that's OK)
+- You MUST deploy as "New version" for changes to take effect
+- Old data with #VALUE! errors will need to be recalculated
+- After deployment, use "VSM Tools" → "Recalculate All" menu in Google Sheets
+
+═══════════════════════════════════════════════════════════════
+
+🔍 VERIFY DEPLOYMENT (OPTIONAL):
+
+After deploying, you can verify everything works:
+
+1. In Apps Script, add the verification script:
+   - Create new file: VERIFY_DEPLOYMENT.gs
+   - Copy content from: vsm-app/google-apps-script/VERIFY_DEPLOYMENT.gs
+   - Run function: verifyDeployment
+   - Check logs for test results
+
+═══════════════════════════════════════════════════════════════

@@ -1,0 +1,77 @@
+═══════════════════════════════════════════════════════════════
+  DEPLOY PROCESS STATUS FIX - COPY THIS TO APPS SCRIPT
+═══════════════════════════════════════════════════════════════
+
+WHAT WAS FIXED:
+✅ Transactional processes (Cutting, Sewing, Finishing) now properly calculate completion status
+✅ Actual End Date is now set when WIP = 0 (all quantity completed)
+✅ Date comparison improved to handle both Date objects and strings
+✅ Added logging to debug status calculation
+✅ Both creation (doPost) and update (updateRowWithCalculations) functions fixed
+
+CHANGES MADE:
+1. Line 1221: Changed from always empty to use actualDates.actualEnd
+2. Lines 996-1007: Improved date handling and added logging
+3. Lines 1246-1268: Improved date handling and added logging
+
+═══════════════════════════════════════════════════════════════
+DEPLOYMENT STEPS:
+═══════════════════════════════════════════════════════════════
+
+1. Open Google Apps Script Editor:
+   https://script.google.com/home/projects/1pf9L-WLSelHmFG2aGE891hScLTSRAmcvI16T7YLpmI0/edit
+
+2. Find and open: Code_WithCalculations_FIXED_V2.gs
+
+3. Replace the ENTIRE file content with the updated version from:
+   vsm-app/google-apps-script/Code_WithCalculations_FIXED_V2.gs
+
+4. Click "Save" (💾 icon)
+
+5. Click "Deploy" > "Test deployments"
+
+6. Test with a completed order:
+   - Enter Actual Start Date
+   - Enter Actual End Date (BEFORE Target End Date)
+   - Expected: Status = "Completed - On Time"
+
+7. Test with a delayed order:
+   - Enter Actual Start Date
+   - Enter Actual End Date (AFTER Target End Date)
+   - Expected: Status = "Completed - Delayed"
+
+8. Test with in-progress order:
+   - Enter Actual Start Date only
+   - Leave Actual End Date empty
+   - Expected: Status = "In Progress"
+
+9. Check the Execution Log for debug messages:
+   📊 Status Calculation - Start: [date], End: [date], Target: [date]
+   ✅ Process Status: [status]
+
+═══════════════════════════════════════════════════════════════
+TESTING TRANSACTIONAL PROCESSES:
+═══════════════════════════════════════════════════════════════
+
+For Cutting, Sewing, or Finishing processes:
+
+1. Create first entry with partial quantity:
+   - Qty Achieved Today: 500
+   - Order Qty: 1000
+   - Expected: Status = "In Progress", WIP = 500
+
+2. Create second entry to complete:
+   - Qty Achieved Today: 500
+   - Expected: Status = "Completed - On Time" or "Completed - Delayed"
+   - WIP should = 0
+
+═══════════════════════════════════════════════════════════════
+EXPECTED RESULTS:
+═══════════════════════════════════════════════════════════════
+
+✅ Not Started: No actual start date
+✅ In Progress: Has start date, no end date (or WIP > 0)
+✅ Completed - On Time: Has end date ≤ target end date
+✅ Completed - Delayed: Has end date > target end date
+
+═══════════════════════════════════════════════════════════════

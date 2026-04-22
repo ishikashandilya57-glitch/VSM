@@ -1,0 +1,102 @@
+🚀 DEPLOY NOW - SIMPLE GUIDE
+============================
+
+FILE TO COPY:
+-------------
+vsm-app/google-apps-script/Code_WithCalculations_FIXED_V2.gs
+
+THIS FILE HAS EVERYTHING:
+-------------------------
+✅ 11 Fixed Process Stages
+✅ Progressive SOP Lookup (10-level fallback)
+✅ VA/NNVA/NVA Breakdown (columns K, L, M)
+✅ 5 Supermarkets (SM1, SM2, SM3, SM4, SM5)
+✅ Inter-Process WIP (7 days added to timeline)
+✅ Holiday Calendar (working days calculation)
+✅ Batch Write (fast saves)
+✅ Always Create New Row
+
+DEPLOYMENT STEPS:
+-----------------
+
+1. OPEN FILE
+   → vsm-app/google-apps-script/Code_WithCalculations_FIXED_V2.gs
+
+2. COPY ALL
+   → Ctrl+A (Select All)
+   → Ctrl+C (Copy)
+
+3. GO TO APPS SCRIPT
+   → https://script.google.com/home
+   → Click your VSM project
+
+4. PASTE CODE
+   → Ctrl+A (Select existing code)
+   → Ctrl+V (Paste new code)
+
+5. SAVE
+   → Click 💾 or Ctrl+S
+
+6. DEPLOY
+   → Deploy → New deployment
+   → Web app
+   → Description: "Complete system with holidays"
+   → Deploy
+   → Copy URL
+
+7. UPDATE .ENV.LOCAL (if URL changed)
+   → GOOGLE_APPS_SCRIPT_URL=YOUR_NEW_URL
+
+8. START SERVER
+   → cd vsm-app
+   → npm run dev
+
+9. TEST
+   → Open http://localhost:3000
+   → Press F12 (console)
+   → Submit form
+   → Check: "📅 Holidays Loaded: X days"
+
+DONE! ✅
+
+WHAT YOU'LL SEE:
+----------------
+Console Output:
+  📅 Holidays Loaded: 49 days
+  📊 Process SOP Lead Time: 26.65 days
+     ✅ VA: 15.8 days (59.3%)
+     🔧 NNVA: 6.3 days (23.6%)
+     ⏳ NVA: 4.65 days (17.4%)
+  🏬 Supermarket Breakdown:
+     SM1: 2.2 days
+     SM2: 3 days
+     SM3: 3 days
+     SM4: 0.6 days
+     SM5: 1 day
+     Total: 9.8 days
+  📦 Inter-Process WIP: 7 days
+  🎯 Total Lead Time: 33.65 days
+
+Google Sheet:
+  New row in VSM_Execution with all data
+
+VERIFICATION:
+-------------
+✅ Console shows "Holidays Loaded: X days" (X > 0)
+✅ Calculation shows "working days"
+✅ Target dates skip weekends and holidays
+✅ Data saved to VSM_Execution sheet
+✅ Form saves in <1 second
+
+TROUBLESHOOTING:
+----------------
+❌ "Holidays Loaded: 0 days"
+   → Create "Holidays" sheet with dates in Column A
+
+❌ No "working days" in output
+   → Deploy as NEW VERSION (not just save)
+
+❌ Target dates on weekends
+   → Clear cache, restart server
+
+READY TO GO! 🎯

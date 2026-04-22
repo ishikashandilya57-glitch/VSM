@@ -1,0 +1,124 @@
+═══════════════════════════════════════════════════════════════
+  🚀 QUICK DEPLOY: Process Sequence Enforcement
+═══════════════════════════════════════════════════════════════
+
+✅ FRONTEND: Already Complete (No Action Needed)
+✅ API: Already Complete (No Action Needed)
+⏳ APPS SCRIPT: Needs Deployment
+
+───────────────────────────────────────────────────────────────
+STEP 1: Add Function to Apps Script
+───────────────────────────────────────────────────────────────
+
+1. Open Google Apps Script Editor
+2. Open your Code_WithCalculations_FIXED_V2.gs file
+3. Copy the getProcessStatus() function from:
+   google-apps-script/PROCESS_STATUS_ENDPOINT.gs
+4. Paste it into your Apps Script file
+
+───────────────────────────────────────────────────────────────
+STEP 2: Update doGet() Function
+───────────────────────────────────────────────────────────────
+
+Add this case to your doGet() function:
+
+    // NEW ACTION: Get process status
+    if (action === 'getProcessStatus') {
+      const ocNo = e.parameter.ocNo;
+      if (!ocNo) {
+        return ContentService.createTextOutput(JSON.stringify({
+          success: false,
+          error: 'OC Number is required'
+        })).setMimeType(ContentService.MimeType.JSON);
+      }
+      
+      const result = getProcessStatus(ocNo);
+      return ContentService.createTextOutput(JSON.stringify(result))
+        .setMimeType(ContentService.MimeType.JSON);
+    }
+
+───────────────────────────────────────────────────────────────
+STEP 3: Deploy
+───────────────────────────────────────────────────────────────
+
+1. Click "Deploy" → "New deployment"
+2. Or "Manage deployments" → Edit existing → "New version"
+3. Copy Web App URL if it changed
+4. Update .env.local if URL changed
+
+───────────────────────────────────────────────────────────────
+STEP 4: Restart Dev Server
+───────────────────────────────────────────────────────────────
+
+npm run dev
+
+───────────────────────────────────────────────────────────────
+STEP 5: Test
+───────────────────────────────────────────────────────────────
+
+1. Open http://localhost:3000
+2. Go to Task Update page
+3. Select an OC Number
+4. Check Process Stage dropdown:
+   ✓ Shows only available processes
+   ✓ Visual indicators (✓ ⏳ 🔓)
+   ✓ Status legend appears
+   ✓ Locked processes hidden
+
+───────────────────────────────────────────────────────────────
+WHAT YOU'LL SEE
+───────────────────────────────────────────────────────────────
+
+New OC Number:
+  🔓 Fabric Inhouse (only this available)
+
+After Fabric Inhouse:
+  ✓ Fabric Inhouse (Completed)
+  🔓 Fabric QC
+  🔓 File Release
+
+After Cutting Starts:
+  ✓ Fabric Inhouse (Completed)
+  ✓ Fabric QC (Completed)
+  ✓ File Release (Completed)
+  ✓ Pre-Production Activity (Completed)
+  ✓ CAD / Pattern (Completed)
+  ⏳ Cutting (In Progress)
+  🔓 Sewing (unlocked by partial dependency!)
+
+───────────────────────────────────────────────────────────────
+TROUBLESHOOTING
+───────────────────────────────────────────────────────────────
+
+Issue: All processes locked
+Fix: Check Apps Script deployed, URL correct in .env.local
+
+Issue: Process status not loading
+Fix: Verify getProcessStatus() function added to Apps Script
+
+Issue: Wrong processes unlocked
+Fix: Check process names match exactly in ALL_PROCESSES array
+
+───────────────────────────────────────────────────────────────
+DOCUMENTATION
+───────────────────────────────────────────────────────────────
+
+📖 PROCESS_SEQUENCE_SUMMARY.md - Complete overview
+📖 DEPLOY_PROCESS_SEQUENCE_ENFORCEMENT.md - Detailed guide
+📖 PROCESS_SEQUENCE_VISUAL_GUIDE.md - User experience
+📖 PROCESS_SEQUENCE_ENFORCEMENT.md - Technical details
+
+───────────────────────────────────────────────────────────────
+BENEFITS
+───────────────────────────────────────────────────────────────
+
+✅ Enforces workflow - cannot skip processes
+✅ Natural department isolation - no auth needed
+✅ Prevents errors - cannot enter out of sequence
+✅ Allows corrections - can edit existing entries
+✅ Clear visibility - visual indicators show status
+✅ Fail-safe - if API fails, allows all processes
+
+═══════════════════════════════════════════════════════════════
+  Deploy the Apps Script changes and you're done! 🎉
+═══════════════════════════════════════════════════════════════

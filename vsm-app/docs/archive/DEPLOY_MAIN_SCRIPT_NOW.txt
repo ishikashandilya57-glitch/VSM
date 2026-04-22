@@ -1,0 +1,72 @@
+🚨 YOU MUST DEPLOY THE MAIN SCRIPT NOW 🚨
+
+Adding rows to SOP_Cal is NOT enough!
+The Web App is still using OLD CODE that can't find the data.
+
+═══════════════════════════════════════════════════════════════════
+
+DO THIS NOW (3 MINUTES):
+
+1. In Apps Script, open your main code file
+   (probably called Code.gs or VSM_Logic.gs)
+
+2. Delete EVERYTHING in that file (Ctrl+A, Delete)
+
+3. Open this file on your computer:
+   vsm-app\google-apps-script\Code_WithCalculations_FIXED_V2.gs
+
+4. Copy EVERYTHING (Ctrl+A, Ctrl+C)
+
+5. Paste into Apps Script (Ctrl+V)
+
+6. Save (Ctrl+S)
+
+7. Click "Deploy" button (top right)
+
+8. Click "Manage deployments"
+
+9. Click the pencil icon ✏️ next to your deployment
+
+10. Change "Version" dropdown to "New version"
+
+11. Click "Deploy"
+
+12. Close the dialog
+
+13. In your terminal, press Ctrl+C to stop the dev server
+
+14. Run: npm run dev
+
+15. Go to http://localhost:3000
+
+16. Test with Q2 order (1360 qty), Process: Sewing
+
+17. Should now show: "7. Sewing: 5.35 days" ✅
+
+═══════════════════════════════════════════════════════════════════
+
+WHY THIS IS NEEDED:
+
+✅ SOP_Cal has the data (you added it with AddRows.gs)
+❌ Web App is using OLD CODE that can't find it
+✅ Code_WithCalculations_FIXED_V2.gs has ENHANCED LOOKUP
+❌ But it's only in your computer, not deployed!
+
+You MUST deploy it to Google Apps Script!
+
+═══════════════════════════════════════════════════════════════════
+
+AFTER DEPLOYMENT:
+
+The enhanced lookup will try 10 different combinations to find
+the SOP LT, including:
+- Exact match
+- Product=All
+- Wash=All
+- OrderType=All
+- Multiple combinations
+- Final fallback to All=All
+
+This will find the Sewing row you just added!
+
+═══════════════════════════════════════════════════════════════════

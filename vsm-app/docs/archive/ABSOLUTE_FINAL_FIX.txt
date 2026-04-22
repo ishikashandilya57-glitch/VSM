@@ -1,0 +1,150 @@
+🚨🚨🚨 ABSOLUTE FINAL FIX - FOLLOW EXACTLY 🚨🚨🚨
+
+You're STILL seeing "Sewing: 0 days" because the Web App is running
+OLD CODE even though you may have edited the script.
+
+═══════════════════════════════════════════════════════════════════
+
+THE PROBLEM (100% CONFIRMED):
+
+✅ You have the fixed code in your computer
+✅ You may have even pasted it into Apps Script
+❌ But you DIDN'T deploy it as a NEW VERSION
+❌ The Web App URL is still pointing to the OLD deployment
+
+═══════════════════════════════════════════════════════════════════
+
+STEP-BY-STEP FIX (DO EXACTLY THIS):
+
+1. Open Google Apps Script Editor
+   → Go to your Google Sheet
+   → Extensions → Apps Script
+
+2. Find your MAIN code file
+   → Look in the left sidebar under "Files"
+   → It's probably called: Code.gs or VSM_Logic.gs or similar
+   → Click on it
+
+3. Check if it has the HARD ASSERT
+   → Press Ctrl+F (Find)
+   → Search for: "HARD ASSERT"
+   → If NOT found → You have OLD code, continue to step 4
+   → If found → Skip to step 7
+
+4. Delete ALL code in the file
+   → Select all (Ctrl+A)
+   → Delete
+
+5. Copy the fixed code
+   → On your computer, open:
+     vsm-app\google-apps-script\Code_WithCalculations_FIXED_V2.gs
+   → Select all (Ctrl+A)
+   → Copy (Ctrl+C)
+
+6. Paste into Apps Script
+   → Click in the Apps Script editor
+   → Paste (Ctrl+V)
+   → Save (Ctrl+S)
+   → Wait for "Saved" message
+
+7. VERIFY the code is correct
+   → Press Ctrl+F (Find)
+   → Search for: "HARD ASSERT"
+   → Should find: "if (allStages.length !== 11)"
+   → If NOT found → Go back to step 4
+
+8. RUN VERIFICATION SCRIPT
+   → Add the verification script:
+     - Click + next to "Files"
+     - Name it: Verify.gs
+     - Copy content from: vsm-app\google-apps-script\VERIFY_DEPLOYMENT.gs
+     - Paste and Save
+   → Select function: verifyDeployment
+   → Click Run ▶️
+   → View → Logs
+   → Should say: "✅ SUCCESS! SOP LT is correct (5.35 days for Q2)"
+   → If it says "❌ FAILED" → Run addMissingSewingRows() first
+
+9. DEPLOY AS NEW VERSION (CRITICAL!)
+   → Click "Deploy" button (top right, blue button)
+   → Click "Manage deployments"
+   → You should see your existing deployment
+   → Click the PENCIL ICON ✏️ (not the three dots!)
+   → In the dialog, find "Version" dropdown
+   → Change from "Version 1" (or whatever) to "New version"
+   → Add description: "Fixed SOP lookup - enhanced fallback"
+   → Click "Deploy" button
+   → Wait for "Deployment successful" message
+   → Click "Done"
+
+10. VERIFY DEPLOYMENT WORKED
+    → In Apps Script, select function: testWebAppEndpoint
+    → Click Run ▶️
+    → View → Logs
+    → Should show: "Sewing SOP LT: 5.35 days"
+    → If still shows 0 → Deployment didn't work, repeat step 9
+
+11. RESTART YOUR DEV SERVER
+    → In terminal, press Ctrl+C
+    → Wait for it to stop
+    → Run: npm run dev
+    → Wait for "Ready" message
+
+12. CLEAR BROWSER CACHE
+    → In browser, press Ctrl+Shift+Delete
+    → Select "Cached images and files"
+    → Click "Clear data"
+    → Or just press Ctrl+F5 to hard refresh
+
+13. TEST AGAIN
+    → Go to http://localhost:3000
+    → Fill form with Q2 order (1360 qty)
+    → Process Stage: Sewing
+    → Look at Calculation Steps
+    → Should show: "7. Sewing: 5.35 days" ✅
+
+═══════════════════════════════════════════════════════════════════
+
+WHY THIS KEEPS FAILING:
+
+Most people do steps 1-6 (edit the code) but SKIP step 9 (deploy).
+
+Editing the code in Apps Script does NOT update the Web App!
+You MUST deploy as a NEW VERSION!
+
+Think of it like this:
+- Editing code = changing the recipe
+- Deploying = actually baking the cake
+- Web App = the cake people eat
+
+If you change the recipe but don't bake, people still eat the old cake!
+
+═══════════════════════════════════════════════════════════════════
+
+VERIFICATION CHECKLIST:
+
+[ ] Opened Apps Script
+[ ] Found main code file (Code.gs)
+[ ] Searched for "HARD ASSERT" - FOUND IT
+[ ] Ran verifyDeployment() - shows "✅ SUCCESS"
+[ ] Clicked "Deploy" → "Manage deployments"
+[ ] Clicked PENCIL ICON ✏️
+[ ] Changed Version to "New version"
+[ ] Clicked "Deploy"
+[ ] Saw "Deployment successful"
+[ ] Ran testWebAppEndpoint() - shows "5.35 days"
+[ ] Restarted dev server (Ctrl+C, npm run dev)
+[ ] Cleared browser cache (Ctrl+Shift+Delete)
+[ ] Tested - shows "Sewing: 5.35 days" ✅
+
+═══════════════════════════════════════════════════════════════════
+
+IF STILL NOT WORKING AFTER ALL THIS:
+
+Share the output from these two functions:
+1. verifyDeployment()
+2. testWebAppEndpoint()
+
+This will tell me EXACTLY what's wrong.
+
+═══════════════════════════════════════════════════════════════════

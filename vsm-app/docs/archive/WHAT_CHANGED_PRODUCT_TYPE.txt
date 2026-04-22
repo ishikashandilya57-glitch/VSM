@@ -1,0 +1,123 @@
+🎯 WHAT CHANGED - PRODUCT TYPE FEATURE
+========================================
+
+## BEFORE (Old Behavior)
+------------------------
+❌ Product Type dropdown visible for ALL processes
+❌ User had to select Product Type every time
+❌ Risk of selecting different Product Type for same OC
+❌ Confusing for users
+
+
+## AFTER (New Behavior)
+-----------------------
+✅ Product Type dropdown ONLY visible for Pre-Production
+✅ User selects Product Type ONCE (in Pre-Production)
+✅ All subsequent processes automatically use that Product Type
+✅ Clean, simple, user-friendly
+
+
+## VISUAL COMPARISON
+--------------------
+
+### OLD UI (All Processes):
+┌─────────────────────────────────┐
+│ Process Stage: [Sewing ▼]       │
+│                                  │
+│ Product Type: [Select... ▼]     │  ← Always visible
+│                                  │
+│ Target Start Date: [...]         │
+└─────────────────────────────────┘
+
+
+### NEW UI (Pre-Production):
+┌─────────────────────────────────┐
+│ Process Stage: [Pre-Production ▼]│
+│                                  │
+│ Product Type: [Shirt ▼]         │  ← Visible ONLY here
+│ ℹ️ This will be used for ALL    │
+│    processes                     │
+│                                  │
+│ Target Start Date: [...]         │
+└─────────────────────────────────┘
+
+
+### NEW UI (Other Processes):
+┌─────────────────────────────────┐
+│ Process Stage: [Sewing ▼]       │
+│                                  │
+│ (No Product Type dropdown)       │  ← Hidden!
+│                                  │
+│ Target Start Date: [...]         │
+└─────────────────────────────────┘
+
+
+## HOW IT WORKS
+---------------
+
+STEP 1: Pre-Production
+  User: Selects "Pre-Production"
+  UI: Shows Product Type dropdown
+  User: Selects "Shirt"
+  System: Saves "Shirt" to Column AK in Order_Master
+
+STEP 2: Cutting
+  User: Selects "Cutting"
+  UI: Product Type dropdown HIDDEN
+  System: Retrieves "Shirt" from Order_Master
+  System: Uses "Shirt" for Cutting SOP calculation
+  Result: Cutting (Shirt, Q1) = 1.9 days ✅
+
+STEP 3: Sewing
+  User: Selects "Sewing"
+  UI: Product Type dropdown HIDDEN
+  System: Retrieves "Shirt" from Order_Master
+  System: Uses "Shirt" for Sewing SOP calculation
+  Result: Sewing (Shirt, Q1) = 1.7 days ✅
+
+... and so on for all processes!
+
+
+## FILES CHANGED
+----------------
+✅ vsm-app/src/components/TaskUpdatePageEnhanced.tsx
+   - Product Type dropdown now conditional
+   - Only shows when processStage === 'Pre-Production'
+   - Validation updated
+
+✅ vsm-app/google-apps-script/Code_WithCalculations_FIXED_V2.gs
+   - Retrieves Product Type from Order_Master for non-Pre-Production processes
+   - Automatic lookup by OC Number
+   - Fallback to "All" if not found
+
+
+## TESTING
+----------
+1. Open http://localhost:3000
+2. Select Process: "Pre-Production"
+   → Product Type dropdown appears ✅
+3. Select Process: "Cutting"
+   → Product Type dropdown hidden ✅
+4. Submit Pre-Production with Product Type = "Shirt"
+5. Submit Cutting (no Product Type selection needed)
+6. Check logs: Should see "Retrieved Product Type: Shirt" ✅
+
+
+## BENEFITS
+-----------
+✅ Simpler UI - less clutter
+✅ Faster data entry - one less field to fill
+✅ Consistent data - same Product Type for entire order
+✅ Accurate calculations - product-specific SOP times
+✅ Better UX - users know Product Type is set once
+
+
+## NEXT STEPS
+-------------
+1. Test in browser (http://localhost:3000)
+2. Deploy updated Apps Script to Google
+3. Import SOP_CAL_FINAL_CORRECTED.csv to Google Sheets
+4. Test with real data
+
+
+🎉 DONE! Product Type is now a one-time selection!

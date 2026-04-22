@@ -1,0 +1,120 @@
+═══════════════════════════════════════════════════════════════
+  DEPLOY: REVISED DELIVERY DATE + REVISED QUANTITY
+═══════════════════════════════════════════════════════════════
+
+📋 FILE TO DEPLOY:
+   Code_WithCalculations_FIXED_V2.gs
+
+═══════════════════════════════════════════════════════════════
+
+✨ NEW FEATURES INCLUDED:
+
+1. ✅ REVISED DELIVERY DATE
+   - Planning can update delivery dates in Order_Master Column G
+   - System automatically uses revised date if present
+   - Falls back to original date (Column D) if Column G is empty
+
+2. ✅ REVISED QUANTITY (CUTTING)
+   - User enters revised quantity in Cutting process
+   - Saved to VSM_Execution Column AQ
+   - All processes after Cutting use revised quantity
+
+3. ✅ HOLIDAY CALENDAR
+   - Reads from "Holidays" sheet
+   - Working days calculation (Sundays off, Saturdays 1st & 5th working)
+   - No code deployment needed when holidays change
+
+4. ✅ SUPERMARKET CALCULATIONS
+   - SM1: Cutting NVA (from SOP_Cal)
+   - SM2: 3 days (after Cutting)
+   - SM3: 3 days (after Sewing)
+   - SM4: Finishing NVA (from SOP_Cal)
+   - SM5: 1 day (after Finishing)
+
+5. ✅ VA/NNVA/NVA BREAKDOWN
+   - Reads from SOP_Cal columns K, L, M
+
+═══════════════════════════════════════════════════════════════
+
+📊 ORDER_MASTER SHEET STRUCTURE (CONFIRMED):
+
+Column A: Line No
+Column B: OC NO
+Column C: Order No
+Column D: DEL DATE (Original Delivery Date)
+Column E: QTY ORDER
+Column F: REMARKS
+Column G: REVISED DEL DATE (New! - For Planning updates)
+Column H: Derived Wash Category (index 7) ✅ CONFIRMED
+
+═══════════════════════════════════════════════════════════════
+
+🚀 DEPLOYMENT STEPS:
+
+1. OPEN APPS SCRIPT
+   ✓ Go to your Google Sheet
+   ✓ Extensions → Apps Script
+
+2. COPY CODE
+   ✓ Open: Code_WithCalculations_FIXED_V2.gs
+   ✓ Select all (Ctrl+A)
+   ✓ Copy (Ctrl+C)
+
+3. PASTE CODE
+   ✓ In Apps Script editor, select all (Ctrl+A)
+   ✓ Paste (Ctrl+V)
+   ✓ Save (Ctrl+S)
+
+4. DEPLOY
+   ✓ Click "Deploy" → "Manage deployments"
+   ✓ Click pencil icon (✏️) to edit
+   ✓ Version: "New version"
+   ✓ Description: "Revised delivery date + revised quantity"
+   ✓ Click "Deploy"
+
+5. DONE! ✅
+
+═══════════════════════════════════════════════════════════════
+
+🧪 TESTING SCENARIOS:
+
+TEST 1: Revised Delivery Date
+   • Update Column G in Order_Master for an OC NO
+   • Submit any process for that OC NO
+   • Check: Target dates calculated from Column G date
+   • Log should show: "📅 Using revised delivery date: [date]"
+
+TEST 2: Original Delivery Date (No Revision)
+   • Leave Column G empty for an OC NO
+   • Submit any process
+   • Check: Target dates calculated from Column D date
+   • Log should show: "📅 Using original delivery date: [date]"
+
+TEST 3: Revised Quantity (Cutting)
+   • Select "Cutting" process
+   • Enter revised quantity (e.g., 750)
+   • Submit
+   • Check: Column AQ shows 750
+
+TEST 4: Process After Cutting Uses Revised Qty
+   • Submit "Sewing" process (after Cutting with revised qty)
+   • Check: Calculations use 750 (not original 800)
+   • Log should show: "✅ Using revised quantity: 750 (from Cutting)"
+
+═══════════════════════════════════════════════════════════════
+
+📝 IMPORTANT NOTES:
+
+• Frontend is already updated (no changes needed)
+• Development server running on http://localhost:3001
+• Revised quantity field appears ONLY for Cutting process
+• Revised delivery date is automatic (no UI changes needed)
+• Both features work independently
+
+═══════════════════════════════════════════════════════════════
+
+✅ READY TO DEPLOY!
+
+The code includes all features and is ready for production use.
+
+═══════════════════════════════════════════════════════════════

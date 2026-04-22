@@ -1,0 +1,26 @@
+Process Seq,Process Stage,Product Type,Wash Category,Order Type,Qty Band,VA/NVA,Category,Sub-Category,SOP LT
+7,Sewing,All,All,All,Q1,VA,Production,Assembly,4.85
+7,Sewing,All,All,All,Q2,VA,Production,Assembly,5.35
+7,Sewing,All,All,All,Q3,VA,Production,Assembly,5.35
+7,Sewing,All,All,All,Q4,VA,Production,Assembly,6.15
+7,Sewing,All,All,All,Q5,VA,Production,Assembly,6.35
+8,Washing,All,Garment Wash,All,Q1,VA,Production,Washing,4
+8,Washing,All,Garment Wash,All,Q2,VA,Production,Washing,4.5
+8,Washing,All,Garment Wash,All,Q3,VA,Production,Washing,5
+8,Washing,All,Garment Wash,All,Q4,VA,Production,Washing,5.7
+8,Washing,All,Garment Wash,All,Q5,VA,Production,Washing,6
+8,Washing,All,Enzyme,All,Q1,VA,Production,Washing,6
+8,Washing,All,Enzyme,All,Q2,VA,Production,Washing,6.5
+8,Washing,All,Enzyme,All,Q3,VA,Production,Washing,7
+8,Washing,All,Enzyme,All,Q4,VA,Production,Washing,7.7
+8,Washing,All,Enzyme,All,Q5,VA,Production,Washing,8
+8,Washing,All,Garment Dyed,All,Q1,VA,Production,Washing,7
+8,Washing,All,Garment Dyed,All,Q2,VA,Production,Washing,7.7
+8,Washing,All,Garment Dyed,All,Q3,VA,Production,Washing,8
+8,Washing,All,Garment Dyed,All,Q4,VA,Production,Washing,8.7
+8,Washing,All,Garment Dyed,All,Q5,VA,Production,Washing,9
+9,Finishing,All,All,All,Q1,VA,Production,Finishing,2.4
+9,Finishing,All,All,All,Q2,VA,Production,Finishing,2.7
+9,Finishing,All,All,All,Q3,VA,Production,Finishing,2.7
+9,Finishing,All,All,All,Q4,VA,Production,Finishing,3.1
+9,Finishing,All,All,All,Q5,VA,Production,Finishing,3.3

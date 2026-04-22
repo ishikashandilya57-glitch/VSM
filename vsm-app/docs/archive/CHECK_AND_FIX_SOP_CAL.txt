@@ -1,0 +1,104 @@
+🔍 CHECK AND FIX SOP_CAL STRUCTURE
+
+═══════════════════════════════════════════════════════════════════
+
+Since the rows already exist, we need to check if they have the
+correct structure (explicit "All" values, not blanks).
+
+═══════════════════════════════════════════════════════════════════
+
+STEP 1: Add Diagnostic Script
+
+1. Open Google Apps Script Editor
+2. Click + next to "Files"
+3. Name it: CheckSopCal.gs
+4. Copy from: vsm-app\google-apps-script\CHECK_SOP_CAL_STRUCTURE.gs
+5. Paste and Save (Ctrl+S)
+
+═══════════════════════════════════════════════════════════════════
+
+STEP 2: Check Current Structure
+
+1. Select function: checkSopCalStructure
+2. Click Run ▶️
+3. View → Logs
+
+You'll see one of these:
+
+SCENARIO A: Rows are CORRECT
+✅ PERFECT! All 5 Sewing rows have correct structure.
+→ No action needed! The structure is already correct.
+
+SCENARIO B: Rows have BLANKS
+❌ PROBLEM FOUND!
+Row 15:
+  Product Type: "" ❌ Should be "All"
+  Wash Category: "Garment Wash" ❌ Should be "All"
+  Order Type: "" ❌ Should be "All"
+  ❌ INCORRECT STRUCTURE
+→ Continue to Step 3
+
+SCENARIO C: Missing rows
+⚠️ WARNING: Found 3 correct rows, but expected 5.
+Missing Qty Bands:
+  ❌ Missing: Sewing | All | All | All | Q4
+  ❌ Missing: Sewing | All | All | All | Q5
+→ Run fixSopCalData() to add missing rows
+
+═══════════════════════════════════════════════════════════════════
+
+STEP 3: Fix the Structure (if needed)
+
+If Step 2 showed "INCORRECT STRUCTURE":
+
+1. Select function: fixSewingRows
+2. Click Run ▶️
+3. View → Logs
+
+You should see:
+Row 15: Changed Product Type "" → "All"
+Row 15: Changed Wash Category "Garment Wash" → "All"
+Row 16: Changed Wash Category "Garment Wash" → "All"
+...
+Fixed 5 Sewing rows
+✅ SUCCESS!
+
+═══════════════════════════════════════════════════════════════════
+
+STEP 4: Verify the Fix
+
+1. Select function: checkSopCalStructure
+2. Click Run ▶️
+3. View → Logs
+
+Should now show:
+✅ PERFECT! All 5 Sewing rows have correct structure.
+
+═══════════════════════════════════════════════════════════════════
+
+WHAT THIS FIXES:
+
+Before (WRONG):
+Sewing | [blank] | Garment Wash | [blank] | Q2 | 5.35
+❌ Lookup fails because blanks ≠ "All"
+
+After (CORRECT):
+Sewing | All | All | All | Q2 | 5.35
+✅ Lookup succeeds
+
+═══════════════════════════════════════════════════════════════════
+
+WHY THIS MATTERS:
+
+The lookup engine does EXACT matching:
+- Blank ≠ "All"
+- "" ≠ "All"
+- null ≠ "All"
+
+Only explicit "All" matches!
+
+═══════════════════════════════════════════════════════════════════
+
+DO THIS NOW!
+
+═══════════════════════════════════════════════════════════════════

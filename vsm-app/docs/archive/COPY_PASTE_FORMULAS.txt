@@ -1,0 +1,156 @@
+═══════════════════════════════════════════════════════════════
+  VSM EXECUTION SYSTEM - COPY-PASTE FORMULAS
+═══════════════════════════════════════════════════════════════
+
+INSTRUCTIONS:
+1. Copy each formula below (without the label)
+2. Paste into the corresponding cell in Row 2
+3. After all formulas are in Row 2, select them all and copy down to Row 1000
+
+═══════════════════════════════════════════════════════════════
+
+CELL AL2 (Drv_Wash):
+═══════════════════════════════════════════════════════════════
+=IF($G2="","",IF(IFERROR(VLOOKUP($G2,SOP_Drivers!$A:$C,3,FALSE),"N")="Y",$D2,"All"))
+
+═══════════════════════════════════════════════════════════════
+
+CELL AM2 (Drv_Product):
+═══════════════════════════════════════════════════════════════
+=IF($G2="","",IF(IFERROR(VLOOKUP($G2,SOP_Drivers!$A:$B,2,FALSE),"N")="Y",$AK2,"All"))
+
+═══════════════════════════════════════════════════════════════
+
+CELL AN2 (Drv_OrderType):
+═══════════════════════════════════════════════════════════════
+=IF($G2="","",IF(IFERROR(VLOOKUP($G2,SOP_Drivers!$A:$D,4,FALSE),"N")="Y",$AJ2,"All"))
+
+═══════════════════════════════════════════════════════════════
+
+CELL AO2 (Drv_QtyBand):
+═══════════════════════════════════════════════════════════════
+=IF($G2="","",IF(IFERROR(VLOOKUP($G2,SOP_Drivers!$A:$E,5,FALSE),"N")="Y",$AH2,"All"))
+
+═══════════════════════════════════════════════════════════════
+
+CELL I2 (SOP Lead Time) - RECOMMENDED VERSION:
+═══════════════════════════════════════════════════════════════
+=IF($G2="","",IFERROR(FILTER(SOP_Cal!$J:$J,(TRIM(SOP_Cal!$B:$B)=TRIM($G2))*(TRIM(SOP_Cal!$C:$C)=TRIM($AM2))*(TRIM(SOP_Cal!$D:$D)=TRIM($AL2))*(TRIM(SOP_Cal!$E:$E)=TRIM($AN2))*(TRIM(SOP_Cal!$F:$F)=TRIM($AO2))),0))
+
+═══════════════════════════════════════════════════════════════
+
+CELL I2 (SOP Lead Time) - ALTERNATIVE IF FILTER DOESN'T WORK:
+═══════════════════════════════════════════════════════════════
+=IF($G2="","",IFERROR(INDEX(SOP_Cal!$J:$J,MATCH(1,(SOP_Cal!$B:$B=$G2)*(SOP_Cal!$C:$C=$AM2)*(SOP_Cal!$D:$D=$AL2)*(SOP_Cal!$E:$E=$AN2)*(SOP_Cal!$F:$F=$AO2),0)),0))
+
+═══════════════════════════════════════════════════════════════
+
+CELL I2 (SOP Lead Time) - SIMPLE VERSION (Process Stage only):
+═══════════════════════════════════════════════════════════════
+=IF($G2="","",IFERROR(VLOOKUP($G2,SOP_Cal!$B:$J,9,FALSE),0))
+
+═══════════════════════════════════════════════════════════════
+
+CELL J2 (Target Start Date):
+═══════════════════════════════════════════════════════════════
+=IF($K2="","",$K2-$I2)
+
+═══════════════════════════════════════════════════════════════
+
+CELL K2 (Target End Date):
+═══════════════════════════════════════════════════════════════
+=IF($B2="","",IF($F2=MAX(FILTER($F:$F,$B:$B=$B2)),$E2,INDEX($J:$J,MATCH($F2+1,FILTER($F:$F,$B:$B=$B2),0))))
+
+═══════════════════════════════════════════════════════════════
+
+CELL K2 (Target End Date) - SIMPLE VERSION:
+═══════════════════════════════════════════════════════════════
+=IF($J2="","",$J2+$I2)
+
+═══════════════════════════════════════════════════════════════
+
+CELL N2 (Process Status):
+═══════════════════════════════════════════════════════════════
+=IF($M2="","Not Started",IF($M2<=$K2,"Completed - On Time","Completed - Delayed"))
+
+═══════════════════════════════════════════════════════════════
+
+CELL O2 (Process Time Days):
+═══════════════════════════════════════════════════════════════
+=IF(AND($L2<>"",$M2<>""),DAYS($M2,$L2),0)
+
+═══════════════════════════════════════════════════════════════
+
+CELL P2 (Variance Days):
+═══════════════════════════════════════════════════════════════
+=IF($M2="",$K2-TODAY(),DAYS($M2,$K2))
+
+═══════════════════════════════════════════════════════════════
+
+CELL Q2 (Delay Reason Category):
+═══════════════════════════════════════════════════════════════
+=IF($P2<=0,"On Time",IF($P2<=2,"Minor Delay",IF($P2<=5,"Moderate Delay","Major Delay")))
+
+═══════════════════════════════════════════════════════════════
+
+CELL R2 (Alert Triggered):
+═══════════════════════════════════════════════════════════════
+=IF($P2>2,"Yes","No")
+
+═══════════════════════════════════════════════════════════════
+
+CELL S2 (Delay Flag):
+═══════════════════════════════════════════════════════════════
+=IF($P2>0,"Yes","No")
+
+═══════════════════════════════════════════════════════════════
+
+CELL U2 (Risk Level):
+═══════════════════════════════════════════════════════════════
+=IF($P2>7,"High",IF($P2>3,"Medium","Low"))
+
+═══════════════════════════════════════════════════════════════
+
+DEBUG HELPER - CELL AQ2 (Shows what you're matching):
+═══════════════════════════════════════════════════════════════
+=$G2&"|"&$AM2&"|"&$AL2&"|"&$AN2&"|"&$AO2
+
+═══════════════════════════════════════════════════════════════
+
+SETUP STEPS:
+═══════════════════════════════════════════════════════════════
+
+1. Open VSM_execution sheet
+2. Click cell AL2, paste Drv_Wash formula
+3. Click cell AM2, paste Drv_Product formula
+4. Click cell AN2, paste Drv_OrderType formula
+5. Click cell AO2, paste Drv_QtyBand formula
+6. Click cell I2, paste SOP Lead Time formula (RECOMMENDED version)
+7. Click cell J2, paste Target Start Date formula
+8. Click cell K2, paste Target End Date formula
+9. Click cell N2, paste Process Status formula
+10. Click cell O2, paste Process Time formula
+11. Click cell P2, paste Variance formula
+12. Click cell Q2, paste Delay Reason Category formula
+13. Click cell R2, paste Alert Triggered formula
+14. Click cell S2, paste Delay Flag formula
+15. Click cell U2, paste Risk Level formula
+
+16. Select all cells with formulas in Row 2 (AL2:AO2, I2:K2, N2:U2)
+17. Copy (Ctrl+C)
+18. Select Row 3 to Row 1000
+19. Paste (Ctrl+V)
+
+20. Test with sample data:
+    A2: DBR_L1
+    B2: TEST/25/001
+    G2: Cutting
+    L2: 2026-01-15
+    M2: 2026-01-17
+
+21. Check if I2 shows a number (not 0)
+22. If I2 shows 0, see SOP_LT_DEBUG_GUIDE.md
+
+═══════════════════════════════════════════════════════════════
+END OF FORMULAS
+═══════════════════════════════════════════════════════════════

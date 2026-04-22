@@ -1,0 +1,96 @@
+✅ UPDATED: Always Create New Row on Save
+
+═══════════════════════════════════════════════════════════════════
+
+WHAT CHANGED:
+
+Before: System checked if OC NO + Process Stage exists
+        - If exists → Update existing row
+        - If not exists → Create new row
+
+Now:    System ALWAYS creates a new row
+        - Every form submission = New row in VSM_execution
+        - No more updates to existing rows
+
+═══════════════════════════════════════════════════════════════════
+
+DEPLOY THIS NOW (3 MINUTES):
+
+1. Open Google Apps Script Editor
+   → Go to your Google Sheet
+   → Extensions → Apps Script
+
+2. Replace the code
+   → Open your main code file (Code.gs)
+   → Delete everything (Ctrl+A, Delete)
+   → Open: vsm-app\google-apps-script\Code_WithCalculations_FIXED_V2.gs
+   → Copy all (Ctrl+A, Ctrl+C)
+   → Paste into Apps Script (Ctrl+V)
+   → Save (Ctrl+S)
+
+3. Deploy as NEW VERSION
+   → Click "Deploy" → "Manage deployments"
+   → Click pencil icon ✏️
+   → Change "Version" to "New version"
+   → Description: "Always create new row on save"
+   → Click "Deploy"
+
+4. Test
+   → Go to http://localhost:3000
+   → Fill form and save
+   → Fill SAME form again and save
+   → Check VSM_execution sheet
+   → Should see TWO rows (not one updated row)
+
+═══════════════════════════════════════════════════════════════════
+
+WHAT GETS SAVED IN EACH NEW ROW:
+
+User Input:
+- Line No
+- OC NO
+- Order No (if provided)
+- Process Seq (auto-calculated from process stage)
+- Process Stage
+- Actual Start Date
+- Actual End Date
+- Delay Reason (if delayed)
+
+Auto-Calculated:
+- Wash Category (from Order_Master)
+- Delivery Date (from Order_Master)
+- Qty Band (from order quantity)
+- SOP LT (from SOP_Cal)
+- Target Start Date (calculated)
+- Target End Date (calculated)
+- Process Status (calculated)
+- Process Time (calculated)
+- Variance (calculated)
+- Delay Category (calculated)
+- Alert (calculated)
+- Delay Flag (calculated)
+- Risk Level (calculated)
+
+═══════════════════════════════════════════════════════════════════
+
+EXAMPLE:
+
+Submission 1:
+- OC NO: LC/ARK1/25/12547.1
+- Process Stage: Sewing
+- Actual Start: 2026-01-15
+- Actual End: 2026-01-20
+→ Creates Row 73
+
+Submission 2 (same OC NO + Process Stage):
+- OC NO: LC/ARK1/25/12547.1
+- Process Stage: Sewing
+- Actual Start: 2026-01-16
+- Actual End: 2026-01-21
+→ Creates Row 74 (NEW ROW, doesn't update Row 73)
+
+═══════════════════════════════════════════════════════════════════
+
+DEPLOY NOW!
+
+═══════════════════════════════════════════════════════════════════

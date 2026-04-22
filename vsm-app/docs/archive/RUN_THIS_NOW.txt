@@ -1,0 +1,66 @@
+🔍 RUN DIAGNOSTIC SCRIPT NOW
+
+═══════════════════════════════════════════════════════════════════
+
+Since you're still seeing 0 days after deployment, we need to diagnose
+exactly what's wrong.
+
+═══════════════════════════════════════════════════════════════════
+
+STEP 1: Add Diagnostic Script to Apps Script
+
+1. Open Google Apps Script Editor
+2. Click + next to "Files"
+3. Name it: Diagnose.gs
+4. Copy ALL content from: vsm-app\google-apps-script\DIAGNOSE_PROBLEM.gs
+5. Paste into Diagnose.gs
+6. Save (Ctrl+S)
+
+═══════════════════════════════════════════════════════════════════
+
+STEP 2: Run the Diagnostic
+
+1. Select function: diagnoseProblem (dropdown at top)
+2. Click "Run" ▶️
+3. Click "View" → "Logs"
+4. Copy the ENTIRE log output
+
+═══════════════════════════════════════════════════════════════════
+
+STEP 3: Share the Output
+
+The diagnostic will test:
+✓ If getAllProcessStages returns 11 stages (or old code with 67)
+✓ If SOP_Cal sheet has correct structure
+✓ If Sewing Q2 row exists in SOP_Cal
+✓ If lookupSopLeadTime function works
+✓ If Order_Master lookup works
+✓ If full calculation works
+
+This will tell us EXACTLY which part is failing.
+
+═══════════════════════════════════════════════════════════════════
+
+POSSIBLE OUTCOMES:
+
+1. "getAllProcessStages returns 67 stages"
+   → You didn't deploy the updated code
+   → Solution: Deploy as NEW VERSION
+
+2. "Sewing Q2 row NOT FOUND in SOP_Cal"
+   → The row doesn't exist
+   → Solution: Run addMissingSewingRows()
+
+3. "lookupSopLeadTime returns 0 days"
+   → Row exists but lookup can't find it
+   → Solution: Column mismatch or whitespace issue
+
+4. "lookupSopLeadTime returns 5.35 days" but Web App shows 0
+   → Script works but Web App not deployed
+   → Solution: Deploy as NEW VERSION and clear browser cache
+
+═══════════════════════════════════════════════════════════════════
+
+DO THIS NOW AND SHARE THE COMPLETE LOG OUTPUT!
+
+═══════════════════════════════════════════════════════════════════

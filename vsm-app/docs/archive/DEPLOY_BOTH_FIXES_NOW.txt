@@ -1,0 +1,183 @@
+═══════════════════════════════════════════════════════════════
+  🚀 DEPLOY BOTH FIXES - QUICK GUIDE
+═══════════════════════════════════════════════════════════════
+
+TWO FIXES TO DEPLOY:
+1. ✅ Transactional Process Completion Status (CRITICAL!)
+2. 🔒 Process Sequence Enforcement
+
+TOTAL TIME: ~30 minutes
+
+───────────────────────────────────────────────────────────────
+FIX #1: COMPLETION STATUS (5 MINUTES) - DO THIS FIRST!
+───────────────────────────────────────────────────────────────
+
+PROBLEM:
+Cutting, Sewing, Washing, Finishing, Inspection show "In Progress"
+even when 1000/1000 pieces completed
+
+ONE LINE CHANGE:
+File: Code_WithCalculations_FIXED_V2.gs
+Line: ~1221
+
+BEFORE:
+  rowData[COL.ACTUAL_END - 1] = ''; // ❌
+
+AFTER:
+  rowData[COL.ACTUAL_END - 1] = actualDates.actualEnd || ''; // ✅
+
+STEPS:
+1. Open Google Apps Script
+2. Find line 1221 (search for "COL.ACTUAL_END")
+3. Change '' to actualDates.actualEnd || ''
+4. Save
+5. Deploy → New version
+
+───────────────────────────────────────────────────────────────
+FIX #2: PROCESS SEQUENCE (15 MINUTES)
+───────────────────────────────────────────────────────────────
+
+PROBLEM:
+Users can skip processes, no department isolation
+
+SOLUTION:
+Add process status checking to enforce sequence
+
+STEPS:
+1. Open google-apps-script/PROCESS_STATUS_ENDPOINT.gs
+2. Copy the getProcessStatus() function
+3. Paste into your Code_WithCalculations_FIXED_V2.gs
+4. Update doGet() function to handle new action:
+
+   if (action === 'getProcessStatus') {
+     const ocNo = e.parameter.ocNo;
+     if (!ocNo) {
+       return ContentService.createTextOutput(JSON.stringify({
+         success: false,
+         error: 'OC Number is required'
+       })).setMimeType(ContentService.MimeType.JSON);
+     }
+     
+     const result = getProcessStatus(ocNo);
+     return ContentService.createTextOutput(JSON.stringify(result))
+       .setMimeType(ContentService.MimeType.JSON);
+   }
+
+5. Save
+6. Deploy → New version
+
+───────────────────────────────────────────────────────────────
+RESTART DEV SERVER
+───────────────────────────────────────────────────────────────
+
+npm run dev
+
+───────────────────────────────────────────────────────────────
+TEST FIX #1: COMPLETION STATUS
+───────────────────────────────────────────────────────────────
+
+1. Go to Task Update page
+2. Select OC with Cutting in progress
+3. Enter quantities until cumulative = order qty
+4. Check:
+   ✅ Actual End Date is set
+   ✅ Status shows "Completed - On Time" or "Completed - Delayed"
+   ✅ Dashboard shows correct status
+
+───────────────────────────────────────────────────────────────
+TEST FIX #2: PROCESS SEQUENCE
+───────────────────────────────────────────────────────────────
+
+1. Go to Task Update page
+2. Select a new OC Number
+3. Check Process Stage dropdown:
+   ✅ Only "Fabric Inhouse" available
+   ✅ Other processes hidden
+
+4. Complete Fabric Inhouse
+5. Select same OC Number
+6. Check Process Stage dropdown:
+   ✅ Fabric Inhouse shows ✓ (Completed)
+   ✅ Fabric QC shows 🔓 (Available)
+   ✅ File Release shows 🔓 (Available)
+   ✅ Other processes still hidden
+
+7. Start Cutting (after completing prerequisites)
+8. Check:
+   ✅ Sewing becomes available (partial dependency)
+
+───────────────────────────────────────────────────────────────
+WHAT YOU'LL SEE AFTER BOTH FIXES
+───────────────────────────────────────────────────────────────
+
+BEFORE:
+❌ Cutting: 1000/1000 → "In Progress"
+❌ Can select any process
+❌ No department isolation
+
+AFTER:
+✅ Cutting: 1000/1000 → "Completed - On Time"
+✅ Can only select unlocked processes
+✅ Visual indicators: ✓ ⏳ 🔓
+✅ Natural department isolation
+✅ Dashboard shows accurate status
+
+───────────────────────────────────────────────────────────────
+TROUBLESHOOTING
+───────────────────────────────────────────────────────────────
+
+Issue: Still shows "In Progress" after completion
+→ Check line 1221 change was saved and deployed
+
+Issue: Process sequence not working
+→ Check getProcessStatus() function was added
+→ Check doGet() was updated
+→ Check Apps Script logs for errors
+
+Issue: Frontend errors
+→ Check browser console
+→ Verify Apps Script URL in .env.local
+→ Restart dev server
+
+───────────────────────────────────────────────────────────────
+DOCUMENTATION
+───────────────────────────────────────────────────────────────
+
+Completion Status:
+📖 DEPLOY_TRANSACTIONAL_COMPLETION_FIX.txt
+📖 FIX_TRANSACTIONAL_PROCESS_COMPLETION.md
+📖 TRANSACTIONAL_COMPLETION_VISUAL_GUIDE.md
+
+Process Sequence:
+📖 QUICK_DEPLOY_PROCESS_SEQUENCE.txt
+📖 DEPLOY_PROCESS_SEQUENCE_ENFORCEMENT.md
+📖 PROCESS_SEQUENCE_VISUAL_GUIDE.md
+
+Complete Overview:
+📖 COMPLETE_FIX_SUMMARY.md
+
+───────────────────────────────────────────────────────────────
+DEPLOYMENT CHECKLIST
+───────────────────────────────────────────────────────────────
+
+Fix #1: Completion Status
+[ ] Line 1221 changed
+[ ] Saved
+[ ] Deployed
+
+Fix #2: Process Sequence
+[ ] getProcessStatus() function added
+[ ] doGet() updated
+[ ] Saved
+[ ] Deployed
+
+Testing:
+[ ] Dev server restarted
+[ ] Completion status tested
+[ ] Process sequence tested
+[ ] Dashboard verified
+[ ] No console errors
+
+═══════════════════════════════════════════════════════════════
+  Deploy both fixes and transform your VSM system! 🎉
+═══════════════════════════════════════════════════════════════

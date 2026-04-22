@@ -1,0 +1,120 @@
+═══════════════════════════════════════════════════════════════
+  DEPLOY REVISED QUANTITY FEATURE - STEP BY STEP
+═══════════════════════════════════════════════════════════════
+
+📋 WHAT TO DEPLOY:
+   File: Code_WithCalculations_FIXED_V2.gs
+   Location: vsm-app/google-apps-script/Code_WithCalculations_FIXED_V2.gs
+
+═══════════════════════════════════════════════════════════════
+
+🚀 DEPLOYMENT STEPS:
+
+1. OPEN THE FILE
+   ✓ The file is already open in your editor
+   ✓ File: Code_WithCalculations_FIXED_V2.gs
+
+2. SELECT ALL CODE
+   ✓ Press Ctrl+A (Windows) or Cmd+A (Mac)
+   ✓ This selects the entire file content
+
+3. COPY THE CODE
+   ✓ Press Ctrl+C (Windows) or Cmd+C (Mac)
+
+4. OPEN GOOGLE APPS SCRIPT
+   ✓ Go to your Google Sheet
+   ✓ Click Extensions → Apps Script
+
+5. PASTE THE CODE
+   ✓ Select all existing code in Apps Script editor (Ctrl+A)
+   ✓ Paste the new code (Ctrl+V)
+   ✓ This replaces all old code with the new version
+
+6. SAVE
+   ✓ Press Ctrl+S or click the Save icon (💾)
+   ✓ Wait for "Saved" message
+
+7. DEPLOY AS WEB APP
+   ✓ Click "Deploy" button (top right)
+   ✓ Click "Manage deployments"
+   ✓ Click the pencil icon (✏️) to edit existing deployment
+   ✓ Under "Version": Select "New version"
+   ✓ Description: "Added revised quantity feature"
+   ✓ Click "Deploy"
+   ✓ Copy the Web App URL (you already have this in .env.local)
+
+8. DONE! ✅
+
+═══════════════════════════════════════════════════════════════
+
+🧪 TESTING:
+
+After deployment, test these 3 scenarios:
+
+TEST 1: Cutting Process (with revised quantity)
+   • OC NO: LC/DMN/25/12270
+   • Process: Cutting
+   • Revised Qty: 750
+   • Expected: Column AQ shows 750
+
+TEST 2: Process After Cutting (uses revised qty)
+   • OC NO: LC/DMN/25/12270
+   • Process: Sewing
+   • Expected: Uses 750 for calculations
+
+TEST 3: Process Before Cutting (uses original qty)
+   • OC NO: LC/DMN/25/12270
+   • Process: Fabric QC
+   • Expected: Uses 800 from Order_Master
+
+═══════════════════════════════════════════════════════════════
+
+✨ NEW FEATURES INCLUDED:
+
+✅ Holiday Calendar System
+   - Reads from "Holidays" sheet
+   - Calculates working days (Sundays off, Saturdays 1st & 5th working)
+   - No code deployment needed when holidays change
+
+✅ Revised Quantity Feature
+   - User enters revised quantity in Cutting process
+   - Saved to Column AQ
+   - All processes after Cutting use revised quantity
+   - Qty Band recalculated automatically
+
+✅ Supermarket Calculations
+   - SM1: Cutting NVA (from SOP_Cal)
+   - SM2: 3 days (after Cutting)
+   - SM3: 3 days (after Sewing)
+   - SM4: Finishing NVA (from SOP_Cal)
+   - SM5: 1 day (after Finishing)
+
+✅ VA/NNVA/NVA Breakdown
+   - Reads from SOP_Cal columns K, L, M
+   - Shows in calculation steps
+
+═══════════════════════════════════════════════════════════════
+
+📝 NOTES:
+
+• The frontend is already updated (no changes needed)
+• Development server should be running on http://localhost:3000
+• If not running: cd vsm-app && npm run dev
+• The revised quantity field appears ONLY for Cutting process
+• It's an amber-colored box that stands out
+
+═══════════════════════════════════════════════════════════════
+
+❓ NEED HELP?
+
+If deployment fails:
+1. Check if you have Editor access to the Google Sheet
+2. Make sure you're editing the correct deployment
+3. Verify the Web App URL in .env.local matches deployment URL
+
+If testing fails:
+1. Check browser console for errors (F12)
+2. Check Apps Script logs (View → Logs)
+3. Verify column AQ exists in VSM_Execution sheet
+
+═══════════════════════════════════════════════════════════════

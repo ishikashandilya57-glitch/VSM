@@ -1,0 +1,93 @@
+✅ SIMPLEST METHOD: Copy-Paste into Google Sheet
+
+═══════════════════════════════════════════════════════════════════
+
+STEP 1: Open the CSV File (1 minute)
+
+1. On your computer, open: vsm-app\SOP_CAL_CORRECT_DATA.csv
+2. Open it with Notepad or Excel
+3. Select ALL (Ctrl+A)
+4. Copy (Ctrl+C)
+
+═══════════════════════════════════════════════════════════════════
+
+STEP 2: Paste into Google Sheet (1 minute)
+
+1. Open your Google Sheet
+2. Go to SOP_Cal tab
+3. Find an empty area (or create a new temporary sheet)
+4. Click on a cell
+5. Paste (Ctrl+V)
+6. The data will appear in columns
+
+═══════════════════════════════════════════════════════════════════
+
+STEP 3: Copy the Rows to Correct Location (2 minutes)
+
+Now you have 25 rows with correct structure:
+- 5 Sewing rows (Q1-Q5)
+- 15 Washing rows (3 wash types × 5 qty bands)
+- 5 Finishing rows (Q1-Q5)
+
+For each row:
+1. Check if it already exists in your SOP_Cal
+2. If exists → Replace the old row with the new one
+3. If doesn't exist → Add the new row
+
+KEY: Make sure columns match:
+- Column A: Process Seq
+- Column B: Process Stage
+- Column C: Product Type (must be "All")
+- Column D: Wash Category
+- Column E: Order Type (must be "All")
+- Column F: Qty Band
+- Column J: SOP LT
+
+═══════════════════════════════════════════════════════════════════
+
+STEP 4: Verify (1 minute)
+
+Check these specific rows exist:
+
+Sewing rows:
+✓ Sewing | All | All | All | Q1 | 4.85
+✓ Sewing | All | All | All | Q2 | 5.35
+✓ Sewing | All | All | All | Q5 | 6.35
+
+Washing rows:
+✓ Washing | All | Garment Wash | All | Q2 | 4.5
+✓ Washing | All | Enzyme | All | Q3 | 7
+✓ Washing | All | Garment Dyed | All | Q4 | 8.7
+
+Finishing rows:
+✓ Finishing | All | All | All | Q2 | 2.7
+✓ Finishing | All | All | All | Q5 | 3.3
+
+═══════════════════════════════════════════════════════════════════
+
+STEP 5: Test (1 minute)
+
+1. Go to http://localhost:3000
+2. Fill form with:
+   - OC NO: Any Q2 order (2700 units)
+   - Process Stage: Sewing
+3. Look at calculation steps
+4. Should show: "7. Sewing: 5.35 days" ✅
+
+═══════════════════════════════════════════════════════════════════
+
+CRITICAL POINTS:
+
+✅ Product Type column MUST be "All" (not blank)
+✅ Wash Category for Sewing MUST be "All" (not blank)
+✅ Order Type column MUST be "All" (not blank)
+✅ Qty Band MUST be Q1, Q2, Q3, Q4, or Q5 (not blank)
+
+❌ NO BLANKS ALLOWED!
+❌ Empty cells will cause lookup to fail!
+
+═══════════════════════════════════════════════════════════════════
+
+TOTAL TIME: 5 minutes
+
+═══════════════════════════════════════════════════════════════════

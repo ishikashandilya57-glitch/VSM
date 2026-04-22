@@ -1,0 +1,287 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Test Apps Script POST Request</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            max-width: 900px;
+            margin: 30px auto;
+            padding: 20px;
+            background: #f5f5f5;
+        }
+        .container {
+            background: white;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        h1 { color: #333; margin-top: 0; }
+        .url-box, .payload-box {
+            background: #f8f9fa;
+            padding: 15px;
+            border-radius: 5px;
+            margin: 20px 0;
+            border-left: 4px solid #2196F3;
+        }
+        .url-box input, .payload-box textarea {
+            width: 100%;
+            padding: 10px;
+            font-size: 14px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-family: monospace;
+            box-sizing: border-box;
+        }
+        .payload-box textarea {
+            min-height: 150px;
+            resize: vertical;
+        }
+        button {
+            background: #2196F3;
+            color: white;
+            border: none;
+            padding: 12px 30px;
+            font-size: 16px;
+            border-radius: 5px;
+            cursor: pointer;
+            margin: 10px 5px 10px 0;
+        }
+        button:hover { background: #1976D2; }
+        .test-result {
+            margin: 20px 0;
+            padding: 20px;
+            border-radius: 5px;
+            border-left: 4px solid;
+        }
+        .success { 
+            background: #f1f8f4; 
+            border-color: #4CAF50;
+            color: #2e7d32;
+        }
+        .error { 
+            background: #fef1f0; 
+            border-color: #f44336;
+            color: #c62828;
+        }
+        .warning { 
+            background: #fff8e1; 
+            border-color: #ff9800;
+            color: #e65100;
+        }
+        .loading { 
+            background: #e3f2fd; 
+            border-color: #2196F3;
+            color: #1565c0;
+        }
+        pre {
+            background: #f5f5f5;
+            padding: 15px;
+            border-radius: 4px;
+            overflow-x: auto;
+            font-size: 12px;
+            white-space: pre-wrap;
+            word-wrap: break-word;
+        }
+        .error-box {
+            background: #fff3cd;
+            padding: 20px;
+            margin: 20px 0;
+            border-radius: 5px;
+            border-left: 4px solid #ffc107;
+        }
+        .error-box h3 { margin-top: 0; color: #856404; }
+        .icon { font-size: 24px; margin-right: 10px; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🧪 Test Apps Script POST Request</h1>
+        
+        <div class="url-box">
+            <label><strong>Apps Script URL:</strong></label>
+            <input type="text" id="scriptUrl" value="https://script.google.com/macros/s/AKfycbwAfVUwR5IXcpfG9Wa6wRAaKsG2_Xeu_-UXyuk_1kt3t9jxpZeq9V8OPBzSqZeoUIaW/exec">
+        </div>
+
+        <div class="payload-box">
+            <label><strong>Request Payload (JSON):</strong></label>
+            <textarea id="payload">{
+  "ocNo": "PRLS/25/12973",
+  "processStage": "CAD / Pattern",
+  "lineNo": "DBR_L1",
+  "factory": "Test Factory",
+  "actualQty": 1000
+}</textarea>
+        </div>
+
+        <button onclick="testPost()">🚀 Test POST Request</button>
+        <button onclick="clearResults()">🗑️ Clear Results</button>
+
+        <div id="results"></div>
+
+        <div class="error-box">
+            <h3>⚠️ Current Error Found:</h3>
+            <p><strong>Error:</strong> <code>SyntaxError: Identifier 'SHEET_VSM_EXECUTION' has already been declared</code></p>
+            <p><strong>Cause:</strong> You have multiple files in your Apps Script project with duplicate variable declarations.</p>
+            <h4>Fix:</h4>
+            <ol>
+                <li>Open Apps Script editor</li>
+                <li>Look at the left sidebar - you'll see multiple files (Code.gs, VSM_Logic, etc.)</li>
+                <li><strong>Delete ALL files except Code.gs</strong></li>
+                <li>Make sure Code.gs has all the code from Code_WithCalculations_FIXED_V2.gs</li>
+                <li>Save (Ctrl+S)</li>
+                <li>Deploy again</li>
+                <li>Come back here and test again</li>
+            </ol>
+        </div>
+    </div>
+
+    <script>
+        function getScriptUrl() {
+            return document.getElementById('scriptUrl').value.trim();
+        }
+
+        function getPayload() {
+            try {
+                return JSON.parse(document.getElementById('payload').value);
+            } catch (e) {
+                alert('Invalid JSON in payload: ' + e.message);
+                return null;
+            }
+        }
+
+        function addResult(html) {
+            document.getElementById('results').innerHTML += html;
+        }
+
+        function clearResults() {
+            document.getElementById('results').innerHTML = '';
+        }
+
+        async function testPost() {
+            const url = getScriptUrl();
+            const payload = getPayload();
+            
+            if (!payload) return;
+
+            clearResults();
+            
+            addResult(`
+                <div class="test-result loading">
+                    <h2><span class="icon">⏳</span>Testing POST Request</h2>
+                    <p><strong>URL:</strong> ${url}</p>
+                    <p><strong>Method:</strong> POST</p>
+                    <p><strong>Payload:</strong></p>
+                    <pre>${JSON.stringify(payload, null, 2)}</pre>
+                </div>
+            `);
+
+            try {
+                const response = await fetch(url, {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json"
+                    },
+                    body: JSON.stringify(payload)
+                });
+
+                const contentType = response.headers.get('content-type') || 'unknown';
+                const text = await response.text();
+                
+                if (contentType.includes('application/json')) {
+                    try {
+                        const data = JSON.parse(text);
+                        
+                        if (data.success) {
+                            updateLastResult(`
+                                <div class="test-result success">
+                                    <h2><span class="icon">✅</span>SUCCESS!</h2>
+                                    <p><strong>Status:</strong> ${response.status} OK</p>
+                                    <p><strong>Content-Type:</strong> ${contentType}</p>
+                                    <h3>Response Data:</h3>
+                                    <pre>${JSON.stringify(data, null, 2)}</pre>
+                                    <p style="font-weight: bold; color: green; font-size: 18px;">
+                                        🎉 Apps Script is working correctly!
+                                    </p>
+                                    <p>Target dates should now appear in your app at http://localhost:3000</p>
+                                </div>
+                            `);
+                        } else {
+                            updateLastResult(`
+                                <div class="test-result warning">
+                                    <h2><span class="icon">⚠️</span>Partial Success</h2>
+                                    <p><strong>Status:</strong> ${response.status}</p>
+                                    <p>Apps Script responded but returned an error:</p>
+                                    <pre>${JSON.stringify(data, null, 2)}</pre>
+                                </div>
+                            `);
+                        }
+                    } catch (e) {
+                        updateLastResult(`
+                            <div class="test-result error">
+                                <h2><span class="icon">❌</span>Invalid JSON Response</h2>
+                                <p><strong>Status:</strong> ${response.status}</p>
+                                <p>Response claims to be JSON but couldn't parse it</p>
+                                <pre>${text.substring(0, 500)}</pre>
+                            </div>
+                        `);
+                    }
+                } else if (contentType.includes('text/html')) {
+                    // Extract error message from HTML if possible
+                    const errorMatch = text.match(/<div[^>]*>([^<]*Error[^<]*)<\/div>/i);
+                    const errorMessage = errorMatch ? errorMatch[1] : 'Unknown error';
+                    
+                    updateLastResult(`
+                        <div class="test-result error">
+                            <h2><span class="icon">❌</span>Apps Script Error</h2>
+                            <p><strong>Status:</strong> ${response.status}</p>
+                            <p><strong>Content-Type:</strong> ${contentType}</p>
+                            <p><strong>Error Message:</strong></p>
+                            <pre>${errorMessage}</pre>
+                            <h3>Full HTML Response (first 1000 chars):</h3>
+                            <pre>${text.substring(0, 1000)}</pre>
+                            <p style="font-weight: bold; color: red;">
+                                ⚠️ Apps Script has a code error! Check the error message above.
+                            </p>
+                        </div>
+                    `);
+                } else {
+                    updateLastResult(`
+                        <div class="test-result error">
+                            <h2><span class="icon">❌</span>Unexpected Response</h2>
+                            <p><strong>Status:</strong> ${response.status}</p>
+                            <p><strong>Content-Type:</strong> ${contentType}</p>
+                            <pre>${text.substring(0, 500)}</pre>
+                        </div>
+                    `);
+                }
+            } catch (error) {
+                updateLastResult(`
+                    <div class="test-result error">
+                        <h2><span class="icon">❌</span>FETCH FAILED</h2>
+                        <p><strong>Error:</strong> ${error.message}</p>
+                        <p><strong>Problem:</strong> Cannot reach Apps Script URL</p>
+                        <h3>Possible Causes:</h3>
+                        <ul>
+                            <li>Apps Script not deployed</li>
+                            <li>Wrong URL</li>
+                            <li>Network/firewall blocking request</li>
+                            <li>CORS issue</li>
+                        </ul>
+                    </div>
+                `);
+            }
+        }
+
+        function updateLastResult(html) {
+            const results = document.getElementById('results');
+            const children = results.children;
+            if (children.length > 0) {
+                children[children.length - 1].outerHTML = html;
+            } else {
+                results.innerHTML = html;
+            }
+        }
+    </script>
+</body>
+</html>

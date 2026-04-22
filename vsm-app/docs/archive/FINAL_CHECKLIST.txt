@@ -1,0 +1,137 @@
+🔥 FINAL CHECKLIST - DO ALL 3 STEPS
+
+═══════════════════════════════════════════════════════════════════
+
+You ran AddRows.gs ✅ but still seeing 0 days ❌
+
+This means you need to do ALL THREE steps:
+
+═══════════════════════════════════════════════════════════════════
+
+STEP 1: Check What the Script Did
+═══════════════════════════════════════════════════════════════════
+
+In Apps Script:
+→ Click "View" → "Logs" (or Ctrl+Enter)
+
+You should see:
+✅ Added: Sewing | Garment Wash | Q1 | 4.85 days
+✅ Added: Sewing | Garment Wash | Q2 | 5.35 days
+...
+Total rows added: 5
+
+OR:
+
+⏭️ Row already exists: Sewing | Garment Wash | Q2 | 5.35 days
+...
+Total rows added: 0
+
+If it says "already exists", the rows are there.
+If it says "added", the rows were just added.
+
+═══════════════════════════════════════════════════════════════════
+
+STEP 2: Verify SOP_Cal Sheet Has the Data
+═══════════════════════════════════════════════════════════════════
+
+→ Go to your Google Sheet
+→ Open the "SOP_Cal" tab
+→ Look for rows with:
+  - Column B: "Sewing"
+  - Column D: "Garment Wash"
+  - Column F: "Q2"
+  - Column J: 5.35
+
+If you DON'T see this row, the script didn't work.
+If you DO see this row, continue to Step 3.
+
+═══════════════════════════════════════════════════════════════════
+
+STEP 3: Deploy the Updated Main Script (CRITICAL!)
+═══════════════════════════════════════════════════════════════════
+
+Even if SOP_Cal has the data, the Web App needs the updated code!
+
+In Apps Script:
+→ Open Code.gs (or your main script file)
+→ Select ALL (Ctrl+A)
+→ DELETE everything
+
+In your computer:
+→ Open: vsm-app/google-apps-script/Code_WithCalculations_FIXED_V2.gs
+→ Copy ALL (Ctrl+A, Ctrl+C)
+
+Back in Apps Script:
+→ Paste (Ctrl+V)
+→ Save (Ctrl+S)
+
+Deploy:
+→ Click "Deploy" → "Manage deployments"
+→ Click pencil icon ✏️ on existing deployment
+→ Change "Version" to "New version"
+→ Add description: "Fixed SOP lookup with enhanced fallback"
+→ Click "Deploy"
+→ Copy the Web App URL (if it changed)
+
+Update .env.local:
+→ Open: vsm-app/.env.local
+→ Make sure NEXT_PUBLIC_GOOGLE_APPS_SCRIPT_URL has the correct URL
+→ Save
+
+Restart dev server:
+→ Press Ctrl+C in terminal
+→ Run: npm run dev
+→ Wait for "Ready" message
+
+═══════════════════════════════════════════════════════════════════
+
+STEP 4: Test Again
+═══════════════════════════════════════════════════════════════════
+
+→ Go to http://localhost:3000 (or 3001)
+→ Fill in form:
+  - Line No: Any
+  - OC NO: Any with ~1360 qty (Q2)
+  - Process Stage: Sewing
+
+Look at Calculation Steps:
+✅ Should show: "7. Sewing: 5.35 days"
+❌ If still shows: "7. Sewing: 0 days" → You didn't deploy Step 3
+
+═══════════════════════════════════════════════════════════════════
+
+WHY ALL 3 STEPS ARE NEEDED:
+
+Step 1: Adds data to SOP_Cal table
+Step 2: Verifies the data is there
+Step 3: Updates the Web App to use the new lookup logic
+
+If you skip Step 3, the Web App still uses old code that can't find
+the data even though it exists in the sheet!
+
+═══════════════════════════════════════════════════════════════════
+
+QUICK CHECK:
+
+[ ] Ran AddRows.gs script
+[ ] Checked logs - saw "added" or "already exists"
+[ ] Verified SOP_Cal has Sewing row for Q2
+[ ] Copied Code_WithCalculations_FIXED_V2.gs to Apps Script
+[ ] Deployed as NEW VERSION
+[ ] Restarted dev server
+[ ] Tested and saw 5.35 days (not 0)
+
+═══════════════════════════════════════════════════════════════════
+
+IF STILL NOT WORKING:
+
+Run the TEST script:
+→ In Apps Script, select function: testSopLookup
+→ Click Run
+→ View → Logs
+→ Share the log output
+
+This will show EXACTLY what's in your SOP_Cal table and why
+the lookup is failing.
+
+═══════════════════════════════════════════════════════════════════

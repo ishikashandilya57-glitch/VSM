@@ -1,0 +1,202 @@
+═══════════════════════════════════════════════════════════════
+📥 IMPORT CSV TO GOOGLE SHEETS - QUICK GUIDE
+═══════════════════════════════════════════════════════════════
+
+🎯 GOAL: Import SOP_CAL_COMPLETE_TABLE.csv into your SOP_Cal sheet
+
+═══════════════════════════════════════════════════════════════
+STEP 1: BACKUP YOUR CURRENT SHEET (IMPORTANT!)
+═══════════════════════════════════════════════════════════════
+
+1. Open your Google Sheets file
+2. Find "SOP_Cal" tab at the bottom
+3. RIGHT-CLICK on the tab
+4. Select "Duplicate"
+5. Rename to "SOP_Cal_Backup"
+
+✅ Now you have a backup!
+
+═══════════════════════════════════════════════════════════════
+STEP 2: LOCATE THE CSV FILE
+═══════════════════════════════════════════════════════════════
+
+The file is here:
+📁 vsm-app/SOP_CAL_COMPLETE_TABLE.csv
+
+In your file explorer:
+1. Go to the "vsm-app" folder
+2. Find "SOP_CAL_COMPLETE_TABLE.csv"
+3. Remember this location
+
+═══════════════════════════════════════════════════════════════
+STEP 3: OPEN IMPORT DIALOG IN GOOGLE SHEETS
+═══════════════════════════════════════════════════════════════
+
+1. Open your Google Sheets file
+2. Click on "SOP_Cal" tab
+3. Click "File" menu (top left)
+4. Click "Import"
+
+Menu looks like:
+┌─────────────┐
+│ File        │
+├─────────────┤
+│ New         │
+│ Open        │
+│ Import      │ ← Click here
+│ ...         │
+└─────────────┘
+
+═══════════════════════════════════════════════════════════════
+STEP 4: UPLOAD THE CSV FILE
+═══════════════════════════════════════════════════════════════
+
+Import dialog appears with 3 tabs:
+┌──────────────────────────────────────┐
+│ Upload | My Drive | Shared with me   │
+└──────────────────────────────────────┘
+
+1. Click "Upload" tab
+2. Click "Browse" button (or drag & drop)
+3. Navigate to: vsm-app folder
+4. Select: SOP_CAL_COMPLETE_TABLE.csv
+5. Click "Open"
+
+File will upload (takes 1-2 seconds)
+
+═══════════════════════════════════════════════════════════════
+STEP 5: CHOOSE IMPORT SETTINGS
+═══════════════════════════════════════════════════════════════
+
+After upload, you'll see settings:
+
+┌─────────────────────────────────────────────┐
+│ Import file                                 │
+├─────────────────────────────────────────────┤
+│                                             │
+│ Import location:                            │
+│   ○ Create new spreadsheet                  │
+│   ○ Insert new sheet(s)                     │
+│   ● Replace current sheet  ← SELECT THIS   │
+│   ○ Replace data at selected cell           │
+│   ○ Append rows to current sheet            │
+│                                             │
+│ Separator type:                             │
+│   ● Comma  ← Should be auto-selected       │
+│   ○ Tab                                     │
+│   ○ Custom                                  │
+│                                             │
+│ ☑ Convert text to numbers, dates...        │
+│                                             │
+│         [Cancel]  [Import data]             │
+└─────────────────────────────────────────────┘
+
+IMPORTANT SETTINGS:
+✅ Import location: "Replace current sheet"
+✅ Separator type: "Comma"
+✅ Check: "Convert text to numbers..."
+
+═══════════════════════════════════════════════════════════════
+STEP 6: IMPORT THE DATA
+═══════════════════════════════════════════════════════════════
+
+1. Click "Import data" button
+2. Wait 2-3 seconds
+3. Done! ✅
+
+Your SOP_Cal sheet now has the new data!
+
+═══════════════════════════════════════════════════════════════
+STEP 7: VERIFY THE IMPORT
+═══════════════════════════════════════════════════════════════
+
+Check these things:
+
+✅ Total rows: ~50 (including header)
+✅ Column A: Process Seq (1, 2, 3, ..., 11)
+✅ Column B: Process Stage (Fabric Inhouse, Fabric QC, ...)
+✅ Column C: Product Type (Shirt, Overshirt, Knitted Shirt, Tape Shirt, All)
+✅ Column E: Order Type (Repeat, Non-Repeat, All)
+✅ Column G: VA (value-added times)
+✅ Column H: NNVA (necessary non-value-added times)
+✅ Column I: NVA (non-value-added times)
+
+Check Sewing rows (should see multiple):
+Row ~25: 7, Sewing, Shirt, Non-Wash, Repeat, Q2, 1.85, 0, 0, 1.85
+Row ~26: 7, Sewing, Overshirt, Basic Wash, All, Q1, 3.25, 0, 0, 3.25
+Row ~27: 7, Sewing, Knitted Shirt, Non-Wash, All, Q2, 2.15, 0, 0, 2.15
+
+═══════════════════════════════════════════════════════════════
+ALTERNATIVE METHOD: COPY-PASTE (IF IMPORT DOESN'T WORK)
+═══════════════════════════════════════════════════════════════
+
+If File → Import doesn't work:
+
+METHOD A: Open CSV in Excel/Notepad
+1. Right-click SOP_CAL_COMPLETE_TABLE.csv
+2. Open with Notepad (or Excel)
+3. Select all (Ctrl+A)
+4. Copy (Ctrl+C)
+5. Go to Google Sheets
+6. Click cell A1 in SOP_Cal sheet
+7. Paste (Ctrl+V)
+8. Google Sheets will parse the CSV automatically
+
+METHOD B: Direct Paste
+1. Open SOP_CAL_COMPLETE_TABLE.csv in your code editor
+2. Copy all content
+3. Go to Google Sheets
+4. Click cell A1
+5. Paste
+6. Done!
+
+═══════════════════════════════════════════════════════════════
+TROUBLESHOOTING
+═══════════════════════════════════════════════════════════════
+
+Problem: Can't find "Import" in File menu
+Solution: Make sure you're in Google Sheets (not Google Docs)
+
+Problem: Import button is grayed out
+Solution: Make sure you selected "Replace current sheet"
+
+Problem: Data looks wrong after import
+Solution: Try copy-paste method instead
+
+Problem: Columns in wrong order
+Solution: Your original sheet might have different column order
+         Check column headers and rearrange if needed
+
+═══════════════════════════════════════════════════════════════
+WHAT'S NEXT?
+═══════════════════════════════════════════════════════════════
+
+After importing:
+1. ✅ Verify data looks correct
+2. ✅ Deploy Product Type feature (Apps Script)
+3. ✅ Test with different product types
+4. ✅ Check target dates calculate correctly
+
+═══════════════════════════════════════════════════════════════
+FILE LOCATION
+═══════════════════════════════════════════════════════════════
+
+CSV File: vsm-app/SOP_CAL_COMPLETE_TABLE.csv
+Size: ~3 KB
+Rows: 50 (1 header + 49 data rows)
+Format: Comma-separated values
+
+═══════════════════════════════════════════════════════════════
+SUMMARY
+═══════════════════════════════════════════════════════════════
+
+1. Backup: Right-click SOP_Cal → Duplicate
+2. Import: File → Import → Upload
+3. Select: SOP_CAL_COMPLETE_TABLE.csv
+4. Settings: Replace current sheet, Comma
+5. Import: Click "Import data"
+6. Verify: Check 50 rows, Product Types
+
+═══════════════════════════════════════════════════════════════
+
+That's it! Your SOP_Cal sheet is now updated! 🎯

@@ -1,0 +1,110 @@
+🔧 FIX SOP_CAL DATA STRUCTURE NOW
+
+═══════════════════════════════════════════════════════════════════
+
+PROBLEM:
+SOP_Cal rows have BLANKS instead of explicit "All" values.
+The lookup engine requires explicit "All" - NOT blanks!
+
+SOLUTION:
+Run a script to add/fix the correct rows with explicit "All" values.
+
+═══════════════════════════════════════════════════════════════════
+
+STEP 1: Add the Fix Script (2 minutes)
+
+1. Open Google Apps Script Editor
+   → Extensions → Apps Script
+
+2. Create new file
+   → Click + next to "Files"
+   → Name it: FixSopCal.gs
+
+3. Copy the script
+   → Open: vsm-app\google-apps-script\FIX_SOP_CAL_DATA.gs
+   → Copy ALL content (Ctrl+A, Ctrl+C)
+   → Paste into FixSopCal.gs
+   → Save (Ctrl+S)
+
+═══════════════════════════════════════════════════════════════════
+
+STEP 2: Run the Fix (1 minute)
+
+1. Select function: fixSopCalData (dropdown at top)
+2. Click "Run" ▶️
+3. Click "View" → "Logs"
+
+You should see:
+✅ Added: Sewing | All | Q1 | 4.85 days
+✅ Added: Sewing | All | Q2 | 5.35 days
+...
+✅ Added: Washing | Garment Wash | Q2 | 4.5 days
+...
+✅ Added: Finishing | All | Q2 | 2.7 days
+...
+
+Rows added: 25
+✅ SUCCESS! SOP_Cal data structure fixed.
+
+═══════════════════════════════════════════════════════════════════
+
+STEP 3: Verify the Fix (1 minute)
+
+1. Select function: verifySopCalData
+2. Click "Run" ▶️
+3. View → Logs
+
+You should see:
+✅ PASS: Sewing | All | Q1 → 4.85 days
+✅ PASS: Sewing | All | Q2 → 5.35 days
+✅ PASS: Washing | Garment Wash | Q2 → 4.5 days
+...
+Tests passed: 8/8
+✅ ALL TESTS PASSED!
+
+═══════════════════════════════════════════════════════════════════
+
+WHAT GETS FIXED:
+
+SEWING (Qty Band driven ONLY):
+✅ Sewing | All | All | All | Q1 | 4.85
+✅ Sewing | All | All | All | Q2 | 5.35
+✅ Sewing | All | All | All | Q3 | 5.35
+✅ Sewing | All | All | All | Q4 | 6.15
+✅ Sewing | All | All | All | Q5 | 6.35
+
+WASHING (Wash Category + Qty Band driven):
+✅ Washing | All | Garment Wash | All | Q1-Q5 | 4.0-6.0
+✅ Washing | All | Enzyme | All | Q1-Q5 | 6.0-8.0
+✅ Washing | All | Garment Dyed | All | Q1-Q5 | 7.0-9.0
+
+FINISHING (Qty Band driven ONLY):
+✅ Finishing | All | All | All | Q1 | 2.4
+✅ Finishing | All | All | All | Q2 | 2.7
+✅ Finishing | All | All | All | Q3 | 2.7
+✅ Finishing | All | All | All | Q4 | 3.1
+✅ Finishing | All | All | All | Q5 | 3.3
+
+═══════════════════════════════════════════════════════════════════
+
+KEY CHANGES:
+
+Before:
+Sewing | [blank] | [blank] | [blank] | Q2 | 5.35
+❌ Lookup fails - returns 0
+
+After:
+Sewing | All | All | All | Q2 | 5.35
+✅ Lookup succeeds - returns 5.35
+
+═══════════════════════════════════════════════════════════════════
+
+GOLDEN RULE:
+If a parameter does not apply, explicitly set it to "All" in SOP_Cal.
+Never leave it blank or omitted!
+
+═══════════════════════════════════════════════════════════════════
+
+DO THIS NOW! (Total time: 4 minutes)
+
+═══════════════════════════════════════════════════════════════════

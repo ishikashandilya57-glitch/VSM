@@ -1,0 +1,149 @@
+═══════════════════════════════════════════════════════════════════════════
+  DEPLOY COMPLETE CODE - ALL FEATURES INTEGRATED
+═══════════════════════════════════════════════════════════════════════════
+
+📦 WHAT'S INCLUDED:
+  ✅ Process Status Endpoint (for sequence enforcement)
+  ✅ Transactional Completion Fix (Cutting, Sewing, Washing, Finishing, Inspection)
+  ✅ Order Archival System (automatic cleanup after 1 week)
+  ✅ Inspection as Transactional Process (10% sample tracking)
+
+═══════════════════════════════════════════════════════════════════════════
+STEP 1: OPEN YOUR GOOGLE APPS SCRIPT
+═══════════════════════════════════════════════════════════════════════════
+
+1. Open your Google Sheet
+2. Click: Extensions → Apps Script
+3. You'll see your current code
+
+═══════════════════════════════════════════════════════════════════════════
+STEP 2: REPLACE ALL CODE
+═══════════════════════════════════════════════════════════════════════════
+
+1. Select ALL existing code (Ctrl+A or Cmd+A)
+2. Delete it
+3. Open file: google-apps-script/COMPLETE_CODE_WITH_ALL_FEATURES.gs
+4. Copy ALL code from that file
+5. Paste into Apps Script editor
+
+═══════════════════════════════════════════════════════════════════════════
+STEP 3: SAVE AND DEPLOY
+═══════════════════════════════════════════════════════════════════════════
+
+1. Click: File → Save (or Ctrl+S)
+2. Click: Deploy → Manage deployments
+3. Click the pencil icon (✏️) next to your active deployment
+4. Under "Version": Select "New version"
+5. Add description: "Added process sequence, transactional fix, archival, inspection"
+6. Click: Deploy
+7. Copy the new Web App URL (you'll need this for your frontend)
+
+═══════════════════════════════════════════════════════════════════════════
+STEP 4: SET UP ORDER ARCHIVAL (OPTIONAL)
+═══════════════════════════════════════════════════════════════════════════
+
+If you want automatic order archival after 1 week:
+
+1. In your Google Sheet, duplicate the VSM_Execution sheet
+2. Rename the duplicate to: VSM_Execution_Archive
+3. Add 3 columns at the end:
+   - Archived Date
+   - Archived By
+   - Days Since Dispatch
+4. Clear all data rows (keep headers only)
+
+5. In Apps Script editor, find function: setupDailyArchivalTrigger
+6. Click the ▶️ Run button next to it
+7. Authorize if prompted
+8. Check "Triggers" tab (clock icon ⏰) to verify trigger was created
+
+═══════════════════════════════════════════════════════════════════════════
+STEP 5: TEST THE NEW FEATURES
+═══════════════════════════════════════════════════════════════════════════
+
+TEST 1: Process Status Endpoint
+  - Open your update form
+  - Select an OC Number
+  - You should see process sequence enforcement (locked/unlocked processes)
+
+TEST 2: Transactional Completion
+  - Enter data for Cutting/Sewing/Washing/Finishing/Inspection
+  - When cumulative quantity = order quantity
+  - Process Status should show "Completed" (not stuck at "In Progress")
+
+TEST 3: Inspection 10% Tracking
+  - Go to Inspection process
+  - You'll see TWO fields:
+    * Quantity Received from Finishing (tracks cumulative)
+    * Quantity Inspected Today (10% sample with auto-suggestion)
+
+TEST 4: Order Archival (if set up)
+  - Wait for trigger to run (1 AM daily)
+  - OR manually run: archiveOldOrders() function
+  - Orders dispatched > 7 days ago will move to Archive sheet
+
+═══════════════════════════════════════════════════════════════════════════
+WHAT EACH FEATURE DOES
+═══════════════════════════════════════════════════════════════════════════
+
+🔒 PROCESS SEQUENCE ENFORCEMENT:
+   - Users can only enter data for unlocked processes
+   - Processes unlock when dependencies are met:
+     * Strict: Previous process 100% complete (has actualEndDate)
+     * Partial: Previous process started (has actualStartDate)
+   - Visual indicators: ✓ Done | ⏳ In Progress | 🔓 Available | 🔒 Locked
+
+✅ TRANSACTIONAL COMPLETION FIX:
+   - Cutting, Sewing, Washing, Finishing, Inspection now complete properly
+   - When cumulative quantity reaches order quantity:
+     * actualEndDate is set automatically
+     * Process Status changes to "Completed"
+   - No more stuck "In Progress" status
+
+📦 ORDER ARCHIVAL SYSTEM:
+   - Automatically moves old orders to archive
+   - Runs daily at 1 AM
+   - Archives orders 1 week after dispatch
+   - Keeps active tracking clean and fast
+
+🔍 INSPECTION 10% TRACKING:
+   - Inspection added to transactional processes
+   - Tracks cumulative received quantity from Finishing
+   - Inspects 10% sample (auto-calculated suggestion)
+   - Shows progress: Received / Inspected / Remaining
+
+═══════════════════════════════════════════════════════════════════════════
+TROUBLESHOOTING
+═══════════════════════════════════════════════════════════════════════════
+
+❌ "Process Status Endpoint not working"
+   → Check Apps Script logs: View → Logs
+   → Verify deployment URL is correct in your frontend
+   → Test URL: YOUR_URL?action=getProcessStatus&ocNo=TEST_OC_NUMBER
+
+❌ "Transactional processes still stuck at In Progress"
+   → Check if cumulative quantity = order quantity
+   → Look at Apps Script logs for "getActualDates" messages
+   → Verify WIP_QTY column (AV) has formula: =MAX(0,AT-AU)
+
+❌ "Archival not working"
+   → Check if VSM_Execution_Archive sheet exists
+   → Verify trigger is set up (Triggers tab, clock icon)
+   → Run archiveOldOrders() manually to test
+   → Check logs for error messages
+
+❌ "Inspection not showing 10% fields"
+   → Restart your dev server: npm run dev
+   → Clear browser cache
+   → Check TaskUpdatePageEnhanced.tsx has Inspection in transactional list
+
+═══════════════════════════════════════════════════════════════════════════
+NEED HELP?
+═══════════════════════════════════════════════════════════════════════════
+
+1. Check Apps Script logs: View → Logs
+2. Look for error messages (lines starting with ❌)
+3. Test individual functions using the Run button
+4. Check that all sheet names match exactly (case-sensitive)
+
+═══════════════════════════════════════════════════════════════════════════

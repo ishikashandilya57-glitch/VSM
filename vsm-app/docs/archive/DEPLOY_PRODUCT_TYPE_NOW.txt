@@ -1,0 +1,110 @@
+🚀 DEPLOY PRODUCT TYPE FEATURE - QUICK STEPS
+
+═══════════════════════════════════════════════════════════════
+
+WHAT THIS FIXES:
+- All products were getting same VA time (1.85 days for Sewing)
+- Now: Overshirt gets 3.25 days, Basic knitted shirts get 2.15 days, etc.
+- System uses actual Product Type from UI dropdown for SOP lookup
+
+═══════════════════════════════════════════════════════════════
+
+STEP 1: DEPLOY APPS SCRIPT (CRITICAL!)
+───────────────────────────────────────
+1. Open Google Apps Script Editor
+2. Open Code.gs file
+3. SELECT ALL (Ctrl+A) and DELETE
+4. Copy ENTIRE content from: vsm-app/google-apps-script/Code_WithCalculations_FIXED_V2.gs
+5. Paste into Code.gs
+6. Click "Deploy" → "New deployment"
+7. Settings:
+   - Type: Web app
+   - Execute as: Me
+   - Who has access: Anyone
+8. Click "Deploy"
+9. Copy the Web App URL
+10. Update .env.local:
+    NEXT_PUBLIC_GOOGLE_APPS_SCRIPT_URL=<paste URL here>
+
+═══════════════════════════════════════════════════════════════
+
+STEP 2: VERIFY SOP_CAL SHEET
+───────────────────────────────────────
+Make sure Column C (Product Type) has values like:
+- All
+- Shirt
+- Overshirt
+- Evening Shirt
+- etc.
+
+Make sure you have MULTIPLE ROWS for same process with different product types:
+
+Example for Sewing:
+Process Stage | Product Type  | Qty Band | VA   | NNVA | NVA
+Sewing        | Shirt         | Q2       | 1.85 | 1    | 2.5
+Sewing        | Overshirt     | Q2       | 3.25 | 1    | 2.5
+Sewing        | Evening Shirt | Q2       | 2.15 | 1    | 2.5
+
+═══════════════════════════════════════════════════════════════
+
+STEP 3: RESTART FRONTEND (if running locally)
+───────────────────────────────────────
+cd vsm-app
+npm run dev
+
+(Or if deployed on Vercel, it will auto-deploy from git)
+
+═══════════════════════════════════════════════════════════════
+
+STEP 4: TEST
+───────────────────────────────────────
+1. Open form: http://localhost:3000
+2. Select Line No → OC NO → Process Stage
+3. NEW: Product Type dropdown should appear
+4. Select "Overshirt"
+5. Check Target Dates (should be different from "Shirt")
+6. Submit form
+7. Check VSM_Execution sheet:
+   - Column AK should have "Overshirt"
+   - SOP LT should match Overshirt's time
+
+═══════════════════════════════════════════════════════════════
+
+VERIFICATION:
+───────────────────────────────────────
+✅ Product Type dropdown appears in form
+✅ Dropdown shows: All, Shirt, Overshirt, Evening Shirt, etc.
+✅ Selecting different products changes target dates
+✅ Form won't submit without Product Type
+✅ Product Type saved to Column AK in VSM_Execution
+✅ Overshirt gets 3.25 days VA for Sewing (not 1.85)
+
+═══════════════════════════════════════════════════════════════
+
+DEBUGGING:
+───────────────────────────────────────
+If Product Type dropdown is empty:
+→ Check SOP_Cal Column C has product types
+→ Check Apps Script logs (Executions tab)
+→ Check browser console for API errors
+
+If still getting wrong VA times:
+→ Check Apps Script logs show: "Product Type: Overshirt" (not "All")
+→ Verify SOP_Cal has row with that exact product type
+→ Check fallback logic is working
+
+═══════════════════════════════════════════════════════════════
+
+FILES CHANGED:
+───────────────────────────────────────
+✅ vsm-app/src/components/TaskUpdatePageEnhanced.tsx
+✅ vsm-app/src/app/api/product-types/route.ts (NEW)
+✅ vsm-app/src/app/api/update-task/route.ts
+✅ vsm-app/google-apps-script/Code_WithCalculations_FIXED_V2.gs
+
+═══════════════════════════════════════════════════════════════
+
+DEPLOY FILE: Code_WithCalculations_FIXED_V2.gs
+THIS IS THE ONLY APPS SCRIPT FILE YOU NEED!
+
+═══════════════════════════════════════════════════════════════

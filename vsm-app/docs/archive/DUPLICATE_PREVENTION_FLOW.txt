@@ -1,0 +1,175 @@
+╔══════════════════════════════════════════════════════════════════════════════╗
+║                    DUPLICATE PREVENTION FLOW DIAGRAM                         ║
+╚══════════════════════════════════════════════════════════════════════════════╝
+
+┌─────────────────────────────────────────────────────────────────────────────┐
+│  USER ACTION: Submit Task Update                                            │
+│  (e.g., File Release for OC LC/VLT/25/12748)                               │
+└────────────────────────────────┬────────────────────────────────────────────┘
+                                 │
+                                 ▼
+┌─────────────────────────────────────────────────────────────────────────────┐
+│  FRONTEND: Send POST Request                                                │
+│  • Timeout: 55 seconds                                                      │
+│  • Double-click prevention                                                  │
+│  • Loading spinner                                                          │
+└────────────────────────────────┬────────────────────────────────────────────┘
+                                 │
+                                 ▼
+┌─────────────────────────────────────────────────────────────────────────────┐
+│  BACKEND: doPost() Function                                                 │
+│  1. Parse request data                                                      │
+│  2. Validate sheet exists                                                   │
+│  3. Calculate target dates                                                  │
+└────────────────────────────────┬────────────────────────────────────────────┘
+                                 │
+                                 ▼
+┌─────────────────────────────────────────────────────────────────────────────┐
+│  ✨ NEW: findExistingEntry()                                                │
+│  • Get all sheet data                                                       │
+│  • Check if transactional process                                           │
+│  • Search for matching entry                                                │
+└────────────────────────────────┬────────────────────────────────────────────┘
+                                 │
+                    ┌────────────┴────────────┐
+                    │                         │
+                    ▼                         ▼
+        ┌───────────────────┐     ┌───────────────────┐
+        │  DUPLICATE FOUND  │     │   NO DUPLICATE    │
+        │  (Row exists)     │     │   (New entry)     │
+        └─────────┬─────────┘     └─────────┬─────────┘
+                  │                         │
+                  ▼                         ▼
+    ┌─────────────────────────┐   ┌─────────────────────────┐
+    │ updateExistingRow()     │   │ Create New Row          │
+    │ • Update QTY/Dates      │   │ • Prepare rowData[]     │
+    │ • Update delay reason   │   │ • Write to sheet        │
+    │ • Update revised qty    │   │ • Add formulas          │
+    │ • Flush changes         │   │ • Flush changes         │
+    └───────────┬─────────────┘   └───────────┬─────────────┘
+                │                             │
+                ▼                             ▼
+    ┌─────────────────────────┐   ┌─────────────────────────┐
+    │ Return Response:        │   │ Return Response:        │
+    │ • success: true         │   │ • success: true         │
+    │ • action: "updated"     │   │ • action: "created"     │
+    │ • isDuplicate: true     │   │ • isDuplicate: false    │
+    │ • row: 123              │   │ • row: 456              │
+    └───────────┬─────────────┘   └───────────┬─────────────┘
+                │                             │
+                └──────────────┬──────────────┘
+                               │
+                               ▼
+            ┌──────────────────────────────────┐
+            │  FRONTEND: Handle Response       │
+            │  • Show success message          │
+            │  • Update UI                     │
+            │  • Clear form                    │
+            └──────────────────────────────────┘
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+DUPLICATE DETECTION LOGIC:
+
+┌─────────────────────────────────────────────────────────────────────────────┐
+│  NON-TRANSACTIONAL PROCESSES                                                │
+│  (File Release, Pre-Production, CAD/Pattern, Washing, Inspection, Dispatch) │
+├─────────────────────────────────────────────────────────────────────────────┤
+│  Unique Key: OC_NO + PROCESS_STAGE                                          │
+│                                                                              │
+│  Example:                                                                    │
+│  • First save:  LC/VLT/25/12748 + File Release → Create Row 100            │
+│  • Retry:       LC/VLT/25/12748 + File Release → Update Row 100 ✅         │
+│  • Different:   LC/VLT/25/12748 + Pre-Production → Create Row 101          │
+└─────────────────────────────────────────────────────────────────────────────┘
+
+┌─────────────────────────────────────────────────────────────────────────────┐
+│  TRANSACTIONAL PROCESSES                                                    │
+│  (Cutting, Sewing, Finishing)                                               │
+├─────────────────────────────────────────────────────────────────────────────┤
+│  Unique Key: OC_NO + PROCESS_STAGE + ENTRY_DATE                            │
+│                                                                              │
+│  Example:                                                                    │
+│  • Save on 2026-02-02: LC/VLT/25/12748 + Cutting + 2026-02-02 → Row 200   │
+│  • Retry same day:     LC/VLT/25/12748 + Cutting + 2026-02-02 → Row 200 ✅ │
+│  • Next day:           LC/VLT/25/12748 + Cutting + 2026-02-03 → Row 201   │
+└─────────────────────────────────────────────────────────────────────────────┘
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+TIMEOUT SCENARIO:
+
+┌─────────────────────────────────────────────────────────────────────────────┐
+│  BEFORE (Without Duplicate Prevention)                                      │
+├─────────────────────────────────────────────────────────────────────────────┤
+│  1. User submits → Timeout (55s)                                            │
+│  2. Data actually saved in backend (Row 100 created)                        │
+│  3. User retries → Creates Row 101 ❌ DUPLICATE                             │
+│  4. Sheet has 2 identical rows                                              │
+└─────────────────────────────────────────────────────────────────────────────┘
+
+┌─────────────────────────────────────────────────────────────────────────────┐
+│  AFTER (With Duplicate Prevention)                                          │
+├─────────────────────────────────────────────────────────────────────────────┤
+│  1. User submits → Timeout (55s)                                            │
+│  2. Data actually saved in backend (Row 100 created)                        │
+│  3. User retries → Finds Row 100 → Updates Row 100 ✅ NO DUPLICATE         │
+│  4. Sheet has 1 row with latest data                                        │
+└─────────────────────────────────────────────────────────────────────────────┘
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+CODE CHANGES SUMMARY:
+
+┌─────────────────────────────────────────────────────────────────────────────┐
+│  CHANGE #1: Add Helper Functions (After line 60)                            │
+├─────────────────────────────────────────────────────────────────────────────┤
+│  • findExistingEntry(sheet, data)      → 30 lines                          │
+│  • updateExistingRow(sheet, row, data) → 20 lines                          │
+└─────────────────────────────────────────────────────────────────────────────┘
+
+┌─────────────────────────────────────────────────────────────────────────────┐
+│  CHANGE #2: Add Duplicate Check in doPost (Around line 1100)                │
+├─────────────────────────────────────────────────────────────────────────────┤
+│  • Call findExistingEntry()                                                 │
+│  • If exists: updateExistingRow() and return                               │
+│  • If not: Continue with existing logic                                     │
+│  → 15 lines added                                                           │
+└─────────────────────────────────────────────────────────────────────────────┘
+
+┌─────────────────────────────────────────────────────────────────────────────┐
+│  CHANGE #3: Update Response Format (Around line 1220)                       │
+├─────────────────────────────────────────────────────────────────────────────┤
+│  • Add: action: "created"                                                   │
+│  • Add: isDuplicate: false                                                  │
+│  → 2 fields added                                                           │
+└─────────────────────────────────────────────────────────────────────────────┘
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+TESTING MATRIX:
+
+┌──────────────┬─────────────┬──────────────┬─────────────┬──────────────────┐
+│ Process Type │ First Save  │ Retry        │ Next Day    │ Expected Result  │
+├──────────────┼─────────────┼──────────────┼─────────────┼──────────────────┤
+│ File Release │ Create 100  │ Update 100 ✅│ Update 100  │ 1 row total      │
+│ Cutting      │ Create 200  │ Update 200 ✅│ Create 201  │ 2 rows (by date) │
+│ Sewing       │ Create 300  │ Update 300 ✅│ Create 301  │ 2 rows (by date) │
+│ Finishing    │ Create 400  │ Update 400 ✅│ Create 401  │ 2 rows (by date) │
+└──────────────┴─────────────┴──────────────┴─────────────┴──────────────────┘
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+DEPLOYMENT STEPS:
+
+  1. Open EXACT_CODE_CHANGES.md
+  2. Copy CHANGE #1 → Paste after line 60
+  3. Copy CHANGE #2 → Replace around line 1100
+  4. Copy CHANGE #3 → Replace around line 1220
+  5. Save → Deploy → Test
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+✅ RESULT: Clean data, happy users, problem solved!
+
+╚══════════════════════════════════════════════════════════════════════════════╝

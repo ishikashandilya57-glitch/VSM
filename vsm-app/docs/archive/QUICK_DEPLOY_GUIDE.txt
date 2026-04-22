@@ -1,0 +1,57 @@
+╔══════════════════════════════════════════════════════════════╗
+║  DUPLICATE PREVENTION - QUICK DEPLOY GUIDE                  ║
+╚══════════════════════════════════════════════════════════════╝
+
+📁 FILE TO EDIT: Code_WithCalculations_FIXED_V2.gs
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+✅ STEP 1: Add 2 Helper Functions (After line 60)
+
+   Open: EXACT_CODE_CHANGES.md
+   Copy: CHANGE #1 section
+   Paste: After SOP_COL definition
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+✅ STEP 2: Add Duplicate Check (Around line 1100)
+
+   Find: "// ALWAYS CREATE NEW ROW (no update logic)"
+   Open: EXACT_CODE_CHANGES.md
+   Copy: CHANGE #2 section
+   Replace: The section you found
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+✅ STEP 3: Update Success Response (Around line 1220)
+
+   Find: Final "return ContentService.createTextOutput"
+   Open: EXACT_CODE_CHANGES.md
+   Copy: CHANGE #3 section
+   Replace: The return statement
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+💾 SAVE → 🚀 DEPLOY → 🧪 TEST
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+🧪 TESTING:
+
+1. Submit task update → Should create new row
+2. Submit SAME task again → Should update same row
+3. Check sheet → Only 1 row exists ✅
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+📚 DETAILED GUIDES:
+
+⭐ EXACT_CODE_CHANGES.md         - Copy-paste ready code
+📖 DUPLICATE_PREVENTION_SUMMARY.md - Complete overview
+📝 SIMPLE_INTEGRATION_STEPS.md    - Step-by-step guide
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+✨ RESULT: Users can safely retry after timeout!
+
+╚══════════════════════════════════════════════════════════════╝

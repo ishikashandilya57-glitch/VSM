@@ -1,0 +1,161 @@
+═══════════════════════════════════════════════════════════════
+  🎯 EASIEST DEPLOYMENT GUIDE - 10 MINUTES
+═══════════════════════════════════════════════════════════════
+
+YOU ONLY NEED TO EDIT ONE FILE IN GOOGLE APPS SCRIPT!
+
+═══════════════════════════════════════════════════════════════
+  STEP 1: OPEN YOUR APPS SCRIPT (1 min)
+═══════════════════════════════════════════════════════════════
+
+1. Open your Google Sheet
+2. Click: Extensions → Apps Script
+3. You'll see: Code_WithCalculations_FIXED_V2.gs
+4. This is your ONE AND ONLY file to edit
+
+═══════════════════════════════════════════════════════════════
+  STEP 2: FIX COMPLETION STATUS (2 min)
+═══════════════════════════════════════════════════════════════
+
+FIND (around line 1221):
+  rowData[COL.ACTUAL_END - 1] = '';
+
+CHANGE TO:
+  rowData[COL.ACTUAL_END - 1] = actualDates.actualEnd || '';
+
+THAT'S IT! This fixes transactional process completion.
+
+═══════════════════════════════════════════════════════════════
+  STEP 3: ADD PROCESS SEQUENCE FUNCTION (5 min)
+═══════════════════════════════════════════════════════════════
+
+1. Open file: google-apps-script/PROCESS_STATUS_ENDPOINT.gs
+2. COPY the getProcessStatus() function (lines 18-75)
+3. Go back to your Code_WithCalculations_FIXED_V2.gs
+4. SCROLL TO THE VERY END
+5. PASTE the function
+
+Now you have the getProcessStatus() function!
+
+═══════════════════════════════════════════════════════════════
+  STEP 4: UPDATE doGet() FUNCTION (3 min)
+═══════════════════════════════════════════════════════════════
+
+FIND your doGet() function (search for "function doGet")
+
+ADD this code INSIDE the function (before the closing }):
+
+  // NEW: Process Status Endpoint
+  if (action === 'getProcessStatus') {
+    const ocNo = e.parameter.ocNo;
+    if (!ocNo) {
+      return ContentService.createTextOutput(JSON.stringify({
+        success: false,
+        error: 'OC Number is required'
+      })).setMimeType(ContentService.MimeType.JSON);
+    }
+    
+    const result = getProcessStatus(ocNo);
+    return ContentService.createTextOutput(JSON.stringify(result))
+      .setMimeType(ContentService.MimeType.JSON);
+  }
+
+═══════════════════════════════════════════════════════════════
+  STEP 5: SAVE AND DEPLOY (2 min)
+═══════════════════════════════════════════════════════════════
+
+1. Click: File → Save (or Ctrl+S)
+2. Click: Deploy → Manage deployments
+3. Click: Pencil icon (Edit)
+4. Version: Select "New version"
+5. Description: "Process sequence + completion fix"
+6. Click: Deploy
+7. Click: Done
+
+THAT'S IT! YOU'RE DONE WITH APPS SCRIPT!
+
+═══════════════════════════════════════════════════════════════
+  STEP 6: RESTART FRONTEND (1 min)
+═══════════════════════════════════════════════════════════════
+
+In your terminal:
+
+  npm run dev
+
+Wait for it to start, then test!
+
+═══════════════════════════════════════════════════════════════
+  WHAT YOU JUST DEPLOYED
+═══════════════════════════════════════════════════════════════
+
+✅ Completion Status Fix
+   - Transactional processes now show "Completed" correctly
+   - Cutting: 1000/1000 → "Completed - On Time"
+
+✅ Process Sequence Enforcement
+   - Users can only select unlocked processes
+   - Visual indicators: ✓ ⏳ 🔓 🔒
+   - Natural department isolation
+
+═══════════════════════════════════════════════════════════════
+  TEST IT
+═══════════════════════════════════════════════════════════════
+
+TEST 1: Completion Status
+1. Go to Task Update form
+2. Enter daily quantities for Cutting
+3. When total = order quantity
+4. Check status → Should show "Completed - On Time" ✅
+
+TEST 2: Process Sequence
+1. Go to Task Update form
+2. Select a NEW OC Number
+3. Check Process dropdown
+4. Should ONLY show "Fabric Inhouse" ✅
+5. Other processes should be hidden/locked
+
+═══════════════════════════════════════════════════════════════
+  OPTIONAL: ADD MORE FEATURES LATER
+═══════════════════════════════════════════════════════════════
+
+Want to add Order Archival? (15 min)
+📖 Follow: DEPLOY_ORDER_ARCHIVAL.txt
+
+Want to add Performance Optimizations? (2-3 hours)
+📖 Follow: DEPLOY_PHASE_1_OPTIMIZATIONS.txt
+
+═══════════════════════════════════════════════════════════════
+  SUMMARY
+═══════════════════════════════════════════════════════════════
+
+ONE FILE TO EDIT:
+  Code_WithCalculations_FIXED_V2.gs
+
+THREE CHANGES:
+  1. Change 1 line (completion status)
+  2. Add 1 function (getProcessStatus)
+  3. Update doGet() function
+
+ONE DEPLOYMENT:
+  Save → Deploy → New version → Done
+
+TIME: 10 minutes
+
+RESULT: Process sequence + accurate completion status! 🎉
+
+═══════════════════════════════════════════════════════════════
+  NEED HELP?
+═══════════════════════════════════════════════════════════════
+
+Check execution logs:
+  Apps Script → Executions tab
+
+Check browser console:
+  Press F12 → Console tab
+
+Still stuck?
+  Read: DEPLOY_ALL_THREE_FEATURES.txt (more detailed)
+
+═══════════════════════════════════════════════════════════════
+  YOU GOT THIS! 🚀
+═══════════════════════════════════════════════════════════════
