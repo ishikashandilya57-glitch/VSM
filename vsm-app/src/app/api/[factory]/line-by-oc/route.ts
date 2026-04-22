@@ -2,6 +2,18 @@ import { NextResponse } from 'next/server';
 import { google } from 'googleapis';
 import { getFactoryConfig, isValidFactory } from '@/lib/factory';
 
+export const dynamic = 'force-dynamic';
+export const revalidate = 0;
+
+function normalizeHeader(value: unknown): string {
+  return String(value || '').trim().toUpperCase().replace(/[^A-Z0-9]/g, '');
+}
+
+function findHeaderIndex(headers: unknown[], aliases: string[]): number {
+  const normalizedAliases = aliases.map(normalizeHeader);
+  return headers.findIndex((header) => normalizedAliases.includes(normalizeHeader(header)));
+}
+
 export async function GET(
   request: Request,
   { params }: { params: Promise<{ factory: string }> }
@@ -48,21 +60,30 @@ export async function GET(
 
     const sheets = google.sheets({ version: 'v4', auth });
 
-    // Fetch data from Order_Master sheet
+    // Read Order_Master by header names instead of fixed columns.
     const response = await sheets.spreadsheets.values.get({
       spreadsheetId: config.sheetId,
-      range: 'Order_Master!A2:C10000', // Column A: FACTORY, Column B: LINE_NO, Column C: OC_NO
+      range: 'Order_Master',
       valueRenderOption: 'UNFORMATTED_VALUE',
     });
 
-    const rows = response.data.values || [];
+    const values = response.data.values || [];
+    const headers = values[0] || [];
+    const lineIndex = findHeaderIndex(headers, ['LINE', 'LINE NO', 'LINE_NO']);
+    const ocIndex = findHeaderIndex(headers, ['OC NO', 'OC', 'OC_NO']);
+
+    if (ocIndex === -1) {
+      throw new Error('OC NO column not found in Order_Master');
+    }
+
+    const rows = values.slice(1);
 
     // Search for matching OC NO and return Line NO
     for (const row of rows) {
-      if (!row || row.length < 3) continue;
+      if (!row || row.length === 0) continue;
 
-      const rowOcNo = (row[2] || '').toString().trim(); // Column C
-      const rowLineNo = (row[1] || '').toString().trim(); // Column B
+      const rowOcNo = (row[ocIndex] || '').toString().trim();
+      const rowLineNo = lineIndex === -1 ? '' : (row[lineIndex] || '').toString().trim();
 
       if (rowOcNo.toUpperCase() === ocNo.toUpperCase()) {
         return NextResponse.json({

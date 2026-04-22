@@ -2,6 +2,18 @@ import { NextResponse } from 'next/server';
 import { google } from 'googleapis';
 import { getFactoryConfig, isValidFactory } from '@/lib/factory';
 
+export const dynamic = 'force-dynamic';
+export const revalidate = 0;
+
+function normalizeHeader(value: unknown): string {
+  return String(value || '').trim().toUpperCase().replace(/[^A-Z0-9]/g, '');
+}
+
+function findHeaderIndex(headers: unknown[], aliases: string[]): number {
+  const normalizedAliases = aliases.map(normalizeHeader);
+  return headers.findIndex((header) => normalizedAliases.includes(normalizeHeader(header)));
+}
+
 export async function GET(
   request: Request,
   { params }: { params: Promise<{ factory: string }> }
@@ -48,23 +60,57 @@ export async function GET(
 
     const sheets = google.sheets({ version: 'v4', auth });
 
-    // Fetch delay reasons from 'Delay reasons' sheet
-    const response = await sheets.spreadsheets.values.get({
-      spreadsheetId: config.sheetId,
-      range: 'Delay reasons!A:B',
-      valueRenderOption: 'UNFORMATTED_VALUE',
-    });
+    let rows: unknown[][] = [];
+    const candidateRanges = [
+      'Delay reasons',
+      'Delay Reasons',
+      'Delay_Reasons',
+      'DelayReason',
+      'Delay_Reason_Master',
+    ];
 
-    const rows = response.data.values || [];
+    let lastSheetError: unknown = null;
+
+    for (const range of candidateRanges) {
+      try {
+        const response = await sheets.spreadsheets.values.get({
+          spreadsheetId: config.sheetId,
+          range,
+          valueRenderOption: 'UNFORMATTED_VALUE',
+        });
+        rows = response.data.values || [];
+        if (rows.length > 0) break;
+      } catch (error) {
+        lastSheetError = error;
+      }
+    }
+
+    if (rows.length === 0) {
+      console.warn(
+        `[DELAY_REASONS] No delay-reason sheet data found for ${factory}; returning empty list`,
+        lastSheetError
+      );
+      return NextResponse.json({ success: true, data: [] });
+    }
+
+    const headers = rows[0] || [];
+    const processIndex = findHeaderIndex(headers, ['PROCESS STAGE', 'PROCESS', 'STAGE', 'PROCESS_STAGE']);
+    const reasonIndex = findHeaderIndex(headers, ['DELAY REASON', 'REASON', 'DELAY_REASON']);
+
+    if (processIndex === -1 || reasonIndex === -1) {
+      console.warn(`[DELAY_REASONS] Required columns missing for ${factory}; returning empty list`);
+      return NextResponse.json({ success: true, data: [] });
+    }
+
     let delayReasons: string[] = [];
 
     // Find delay reasons for the selected process stage
     for (let i = 1; i < rows.length; i++) { // Skip header row
       const row = rows[i];
-      if (!row || row.length < 2) continue;
+      if (!row || row.length === 0) continue;
 
-      const process = (row[0] || '').toString().trim();
-      const reason = (row[1] || '').toString().trim();
+      const process = (row[processIndex] || '').toString().trim();
+      const reason = (row[reasonIndex] || '').toString().trim();
 
       // Match the process stage (case-insensitive)
       if (process.toLowerCase() === processStage.toLowerCase() && reason) {

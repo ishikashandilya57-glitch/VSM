@@ -2,13 +2,14 @@ import { NextRequest, NextResponse } from 'next/server';
 import { getFactoryConfig, isValidFactory } from '@/lib/factory';
 import { google } from 'googleapis';
 import fs from 'fs';
+import os from 'os';
 import path from 'path';
 
 // Required: force this route to be dynamic
 export const dynamic = 'force-dynamic';
 export const revalidate = 0;
 
-const CACHE_DIR = path.join(process.cwd(), 'tmp', 'cache');
+const CACHE_DIR = path.join(os.tmpdir(), 'vsm-app-cache');
 const CACHE_DURATION = 15 * 60 * 1000; // 15 minutes
 
 // Sheet name to read from
@@ -19,12 +20,20 @@ const apiCache = new Map<string, { data: any; expiry: number }>();
 // In-flight request deduplication
 const activeFetches = new Map<string, Promise<any>>();
 
-// Ensure cache directory exists
-if (!fs.existsSync(CACHE_DIR)) {
-  fs.mkdirSync(CACHE_DIR, { recursive: true });
+function ensureCacheDir(): boolean {
+  try {
+    if (!fs.existsSync(CACHE_DIR)) {
+      fs.mkdirSync(CACHE_DIR, { recursive: true });
+    }
+    return true;
+  } catch (error) {
+    console.error('[PRODDATA] Failed to initialize cache directory:', error);
+    return false;
+  }
 }
 
 function getFileCache(factory: string) {
+  if (!ensureCacheDir()) return null;
   const cacheFile = path.join(CACHE_DIR, `${factory}_vsm_exec.json`);
   if (!fs.existsSync(cacheFile)) return null;
   try {
@@ -39,6 +48,7 @@ function getFileCache(factory: string) {
 }
 
 function setFileCache(factory: string, data: any) {
+  if (!ensureCacheDir()) return;
   const cacheFile = path.join(CACHE_DIR, `${factory}_vsm_exec.json`);
   try {
     fs.writeFileSync(cacheFile, JSON.stringify(data), 'utf8');
@@ -74,6 +84,8 @@ export async function GET(
     }
 
     const bypassCache = request.nextUrl.searchParams.get('refresh') === '1';
+    const rawLimit = request.nextUrl.searchParams.get('limit');
+    const limit = rawLimit ? Math.max(1, Number.parseInt(rawLimit, 10) || 0) : null;
 
     // 1. In-memory cache check
     const memCached = apiCache.get(factory);
@@ -139,9 +151,10 @@ export async function GET(
         }
 
         const columns = (values[0] as string[]).map(h => String(h || '').trim());
-        const rows = values.slice(1);
+        const allRows = values.slice(1);
+        const rows = limit ? allRows.slice(0, limit) : allRows;
 
-        console.log(`[PRODDATA] ✅ Received ${rows.length} rows from Sheets API for "${factory}"`);
+        console.log(`[PRODDATA] ✅ Received ${rows.length}/${allRows.length} rows from Sheets API for "${factory}"`);
 
         const apiResponse = {
           data: { columns, rows },
@@ -149,6 +162,7 @@ export async function GET(
           timestamp: new Date().toISOString(),
           source: 'sheets-api-direct',
           rowCount: rows.length,
+          totalRowCount: allRows.length,
           version: '4.0.0-direct'
         };
 
